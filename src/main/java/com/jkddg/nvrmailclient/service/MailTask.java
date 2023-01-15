@@ -47,7 +47,7 @@ public class MailTask {
                     }
                     if (!tempMailInfo.containsKey(mailInfo.getChannel().getNumber())) {
                         tempMailInfo.put(mailInfo.getChannel().getNumber(), mailInfo);
-                    }else {
+                    } else {
                         tempMailInfo.get(mailInfo.getChannel().getNumber()).getImages().addAll(mailInfo.getImages());
                     }
                 }
@@ -63,24 +63,33 @@ public class MailTask {
                         filePaths.addAll(alarmInfo.getImages());
                     }
                     if (!CollectionUtils.isEmpty(filePaths)) {
-                        //3、发送邮件
-                        MailRequest mailRequest = new MailRequest();
-                        mailRequest.setSubject(SDKConstant.NvrName + "预警" + warnChannel);
-                        mailRequest.setSendTo(NvrConfigConstant.mailTo);
-                        mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
-                        mailRequest.setFilePath(filePaths);
-                        try {
-                            multipleMailService.sendMail(mailRequest);
-                            for (String filePath : filePaths) {
-                                File file = new File(filePath);
-                                if(file.exists()){
-                                    file.delete();
-                                }
-
+                        boolean hasFile = false;
+                        for (String filePath : filePaths) {
+                            File file = new File(filePath);
+                            if (file.exists()) {
+                                hasFile = true;
+                                break;
                             }
-                        } catch (Exception e) {
+                        }
+                        if (hasFile) {
+                            //3、发送邮件
+                            MailRequest mailRequest = new MailRequest();
+                            mailRequest.setSubject(SDKConstant.NvrName + "预警" + warnChannel);
+                            mailRequest.setSendTo(NvrConfigConstant.mailTo);
+                            mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
+                            mailRequest.setFilePath(filePaths);
+                            try {
+                                multipleMailService.sendMail(mailRequest);
+                                for (String filePath : filePaths) {
+                                    File file = new File(filePath);
+                                    if (file.exists()) {
+                                        file.delete();
+                                    }
+                                }
+                            } catch (Exception e) {
 //                    AlarmService.ALARM_QUEUE.add(mailInfo);
-                            log.error("发送邮件失败," + e.getMessage());
+                                log.error("发送邮件失败," + e.getMessage());
+                            }
                         }
                     }
                 }

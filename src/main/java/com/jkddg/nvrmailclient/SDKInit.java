@@ -1,7 +1,6 @@
 package com.jkddg.nvrmailclient;
 
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
-import com.jkddg.nvrmailclient.util.LibPathUtil;
 import com.jkddg.nvrmailclient.util.osSelect;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;

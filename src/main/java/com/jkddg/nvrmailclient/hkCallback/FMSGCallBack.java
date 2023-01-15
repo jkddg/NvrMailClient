@@ -3,7 +3,6 @@ package com.jkddg.nvrmailclient.hkCallback;
 
 import com.jkddg.nvrmailclient.HCNetSDK;
 import com.sun.jna.Pointer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
