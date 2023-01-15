@@ -2,18 +2,18 @@ package com.jkddg.nvrmailclient.hkHelper;
 
 import com.jkddg.nvrmailclient.HCNetSDK;
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
+import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +28,16 @@ import static com.jkddg.nvrmailclient.constant.SDKConstant.lUserID;
 public class CapturePictureHelper {
 
     public List<String> getNVRPicByConfigPath(String indexNo, List<ChannelInfo> channels) {
-        String imgPath = NvrConfigConstant.captureFolder;
-        return getNVRPic(imgPath, indexNo, channels);
+        String imgFolder = NvrConfigConstant.captureFolder;
+        return getNVRPic(imgFolder, indexNo, channels);
+//        List<String> res = new ArrayList<>();
+//        for (ChannelInfo channel : channels) {
+//            String path = picCutCate(imgFolder, indexNo, channel);
+//            if (StringUtils.hasText(path)) {
+//                res.add(path);
+//            }
+//        }
+//        return res;
     }
 
     /**
@@ -85,21 +93,31 @@ public class CapturePictureHelper {
     }
 
 
-    private void picCutCate(int lUserID, int chanLong, String imgPath) {
+    private String picCutCate(String folderPath, String indexNo, ChannelInfo channelInfo) {
         //图片质量
         HCNetSDK.NET_DVR_JPEGPARA jpeg = new HCNetSDK.NET_DVR_JPEGPARA();
         //设置图片分辨率
-        jpeg.wPicSize = 0;
+        jpeg.wPicSize = NvrConfigConstant.capturePicSize;
         //设置图片质量
-        jpeg.wPicQuality = 0;
+        jpeg.wPicQuality = NvrConfigConstant.capturePicQuality;
         IntByReference a = new IntByReference();
         //设置图片大小
         ByteBuffer jpegBuffer = ByteBuffer.allocate(1024 * 1024);
-        File file = new File(imgPath);
+        File file = new File(folderPath);
+        if (!file.exists()) {
+            file.mkdir();
+        }
+
+        if (channelInfo == null) {
+            log.error("通道数据为空");
+            return null;
+        }
+        String imgPath = folderPath + channelInfo.getName() + "-" + indexNo + ".jpeg";
+        file = new File(imgPath);
         // 抓图到内存，单帧数据捕获并保存成JPEG存放在指定的内存空间中
         log.info("-----------这里开始封装 NET_DVR_CaptureJPEGPicture_NEW---------");
         Pointer p = new Memory(200 * 1024);
-        boolean is = hCNetSDK.NET_DVR_CaptureJPEGPicture_NEW(lUserID, chanLong, jpeg, p, 1024 * 1024, a);
+        boolean is = hCNetSDK.NET_DVR_CaptureJPEGPicture_NEW(SDKConstant.lUserID, channelInfo.getNumber(), jpeg, p, 1024 * 1024, a);
         log.info("-----------这里开始图片存入内存----------" + is);
         if (is) {
             /**
@@ -113,6 +131,7 @@ public class CapturePictureHelper {
                 outputStream = new BufferedOutputStream(new FileOutputStream(file));
                 outputStream.write(jpegBuffer.array(), 0, a.getValue());
                 outputStream.flush();
+                return imgPath;
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -127,6 +146,7 @@ public class CapturePictureHelper {
         } else {
             log.info("hksdk(抓图)-抓取失败,错误码:" + hCNetSDK.NET_DVR_GetLastError());
         }
+        return null;
     }
 
 
