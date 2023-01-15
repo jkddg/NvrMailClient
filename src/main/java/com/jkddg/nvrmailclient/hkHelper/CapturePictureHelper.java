@@ -85,7 +85,7 @@ public class CapturePictureHelper {
             log.info("hkSdk抓图成功----------");
             file = new File(path);
             if (!file.exists()) {
-                File[] files = file.listFiles(filter);
+                File[] files = file.getParentFile().listFiles(filter);
                 for (File file1 : files) {
                     file1.renameTo(new File(path));
                 }
