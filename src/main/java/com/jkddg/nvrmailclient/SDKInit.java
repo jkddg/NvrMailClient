@@ -76,6 +76,7 @@ public class SDKInit {
         hCNetSDK.NET_DVR_SetLogToFile(3, "./sdkLog", false);
 
 //        SDKHelper.login_V40("192.168.50.51", (short) 8000, "admin", "abcd123456");
+
     }
 
     /**
@@ -104,6 +105,7 @@ public class SDKInit {
                         strDllPath = NvrConfigConstant.linuxLibPath + "libhcnetsdk.so";
                     }
                     hCNetSDK = (HCNetSDK) Native.loadLibrary(strDllPath, HCNetSDK.class);
+
                 } catch (Exception ex) {
                     log.info("loadLibrary: " + strDllPath + " Error: " + ex.getMessage());
                     return false;

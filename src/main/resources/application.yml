@@ -46,7 +46,7 @@ sender-email:
       senderName: jkddg2025@163.com
 
 nvr:
-  linux-lib-path: /home/ssd/javaApps/hklib
+  linux-lib-path: /home/ssd/javaApps/hklib/
   win-lib-path: D:\hklib\
   server:
     ip: 192.168.50.51
