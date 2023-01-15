@@ -73,7 +73,10 @@ public class MailTask {
                             multipleMailService.sendMail(mailRequest);
                             for (String filePath : filePaths) {
                                 File file = new File(filePath);
-                                file.delete();
+                                if(file.exists()){
+                                    file.delete();
+                                }
+
                             }
                         } catch (Exception e) {
 //                    AlarmService.ALARM_QUEUE.add(mailInfo);
