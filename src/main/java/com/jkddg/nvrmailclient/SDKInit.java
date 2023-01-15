@@ -96,9 +96,11 @@ public class SDKInit {
 //                        mvn install:install-file "-DgroupId=net.java.jna" "-DartifactId=jna" "-Dversion=1.0.0" "-Dpackaging=jar" "-Dfile=D:\Mtime\jna.jar"
 //                        mvn install:install-file "-DgroupId=net.java.jna" "-DartifactId=examples" "-Dversion=1.0.0" "-Dpackaging=jar" "-Dfile=D:\Mtime\examples.jar"
 
+                        NvrConfigConstant.captureFolder = NvrConfigConstant.captureFolderWin;
                         strDllPath = NvrConfigConstant.winLibPath + "HCNetSDK.dll";
                     } else if (osSelect.isLinux()) {
                         //Linux系统加载库路径
+                        NvrConfigConstant.captureFolder = NvrConfigConstant.captureFolderLinux;
                         strDllPath = NvrConfigConstant.linuxLibPath + "libhcnetsdk.so";
                     }
                     hCNetSDK = (HCNetSDK) Native.loadLibrary(strDllPath, HCNetSDK.class);
