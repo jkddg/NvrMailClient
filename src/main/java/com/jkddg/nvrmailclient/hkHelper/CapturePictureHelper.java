@@ -29,14 +29,7 @@ public class CapturePictureHelper {
     public String getNVRPicByConfigPath(String indexNo, ChannelInfo channel) {
         String imgFolder = NvrConfigConstant.captureFolder;
         return getNVRPic(imgFolder, indexNo, channel);
-//        List<String> res = new ArrayList<>();
-//        for (ChannelInfo channel : channels) {
-//            String path = picCutCate(imgFolder, indexNo, channel);
-//            if (StringUtils.hasText(path)) {
-//                res.add(path);
-//            }
-//        }
-//        return res;
+//        return picCutCate(imgFolder, indexNo, channel);
     }
 
     /**
@@ -62,7 +55,7 @@ public class CapturePictureHelper {
             log.error("hkSdk(抓图)-返回设备状态失败" + hCNetSDK.NET_DVR_GetLastError());
         }
         int channelId = channelInfo.getNumber();
-        String path = imgFolder + channelInfo.getName() + "-" + indexNo + ".jpeg";
+        final String path = imgFolder + channelInfo.getName() + "-" + indexNo + ".jpg".trim();
         //非内存直接保存
         //图片质量
         HCNetSDK.NET_DVR_JPEGPARA jpeg = new HCNetSDK.NET_DVR_JPEGPARA();
@@ -77,15 +70,19 @@ public class CapturePictureHelper {
             log.info("hkSdk抓图成功----------");
             file = new File(path);
             if (!file.exists()) {
+                log.warn("抓图文件名异常:" + path);
                 File[] files = file.getParentFile().listFiles(new FilenameFilter() {
                     @Override
                     public boolean accept(File dir, String name) {
                         String filename = dir.getPath() + File.separator + name;
                         return filename.contains(path);
-                    };
+                    }
+
+                    ;
                 });
 
                 for (File file1 : files) {
+                    log.warn("抓图异常文件名:" + path);
                     file1.renameTo(new File(path));
                 }
             }
@@ -159,11 +156,11 @@ public class CapturePictureHelper {
     }
 
     public static void main(String[] args) {
-        String path = "D:\\capture\\aa.jpeg";
+        String path = "D:\\capture\\D1-152633-2.jpeg";
         FilenameFilter filter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
-                String filename =  dir.getPath() + File.separator + name;
+                String filename = dir.getPath() + File.separator + name;
                 return filename.contains(path);
             }
         };
