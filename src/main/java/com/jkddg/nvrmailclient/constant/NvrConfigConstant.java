@@ -18,20 +18,26 @@ public class NvrConfigConstant {
     public static int serverPort;
     public static String serverUser;
     public static String serverPwd;
-    public static short captureImageSize;
+    public static short capturePicSize;
     public static int captureCount;
     public static int captureIntervalSecond;
     public static int listenPort;
     public static String captureFolder;
     public static String captureFolder1;
+    public static short capturePicQuality = 0;
     public static int alarmIntervalSecond;
     public static String mailTo;
     public static String mailFrom;
     public static boolean mailSSl;
     public static int channelFlashMinute = 5;
+    public static String linuxLibPath;
+    public static String winLibPath;
 
     @PostConstruct
     public void readConfig() {
+
+        linuxLibPath = env.getProperty("nvr.linux-lib-path");
+        winLibPath = env.getProperty("nvr.win-lib-path");
         serverIp = env.getProperty("nvr.server.ip");
         serverPort = Integer.parseInt(env.getProperty("nvr.server.port"));
         serverUser = env.getProperty("nvr.server.user");
@@ -39,12 +45,13 @@ public class NvrConfigConstant {
         listenPort = Integer.parseInt(env.getProperty("nvr.listen.port"));
         captureFolder = env.getProperty("nvr.capture.folder");
         captureFolder1 = env.getProperty("nvr.capture.folder1");
-        captureImageSize = Short.parseShort(env.getProperty("nvr.capture.size"));
+        capturePicSize = Short.parseShort(env.getProperty("nvr.capture.pic-size"));
         captureCount = Integer.parseInt(env.getProperty("nvr.capture.count"));
         alarmIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.second"));
         mailTo = env.getProperty("nvr.mail-to");
         mailSSl = Boolean.parseBoolean(env.getProperty("jakarta.mail.ssl"));
         captureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.sleep-second"));
         channelFlashMinute = Integer.parseInt(env.getProperty("nvr.channel.flash-minute"));
+        capturePicQuality = Short.parseShort(env.getProperty("nvr.capture.pic-quality"));
     }
 }

@@ -1,5 +1,6 @@
 package com.jkddg.nvrmailclient;
 
+import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.util.LibPathUtil;
 import com.jkddg.nvrmailclient.util.osSelect;
 import com.sun.jna.Native;
@@ -15,8 +16,6 @@ import static com.jkddg.nvrmailclient.constant.SDKConstant.hCNetSDK;
 @Slf4j
 public class SDKInit {
 
-
-    private static String libPath;
     public static FExceptionCallBack_Imp fExceptionCallBack;
 
     static class FExceptionCallBack_Imp implements HCNetSDK.FExceptionCallBack {
@@ -39,8 +38,8 @@ public class SDKInit {
             HCNetSDK.BYTE_ARRAY ptrByteArray1 = new HCNetSDK.BYTE_ARRAY(256);
             HCNetSDK.BYTE_ARRAY ptrByteArray2 = new HCNetSDK.BYTE_ARRAY(256);
             //这里是库的绝对路径，请根据实际情况修改，注意改路径必须有访问权限
-            String strPath1 = libPath + "libcrypto.so.1.1";
-            String strPath2 = libPath + "libssl.so.1.1";
+            String strPath1 = NvrConfigConstant.linuxLibPath + "libcrypto.so.1.1";
+            String strPath2 = NvrConfigConstant.linuxLibPath + "libssl.so.1.1";
 
             System.arraycopy(strPath1.getBytes(), 0, ptrByteArray1.byValue, 0, strPath1.length());
             ptrByteArray1.write();
@@ -50,7 +49,7 @@ public class SDKInit {
             ptrByteArray2.write();
             hCNetSDK.NET_DVR_SetSDKInitCfg(4, ptrByteArray2.getPointer());
 
-            String strPathCom = libPath;
+            String strPathCom = NvrConfigConstant.linuxLibPath;
             HCNetSDK.NET_DVR_LOCAL_SDK_PATH struComPath = new HCNetSDK.NET_DVR_LOCAL_SDK_PATH();
             System.arraycopy(strPathCom.getBytes(), 0, struComPath.sPath, 0, strPathCom.length());
             struComPath.write();
@@ -97,11 +96,10 @@ public class SDKInit {
 //                        mvn install:install-file "-DgroupId=net.java.jna" "-DartifactId=jna" "-Dversion=1.0.0" "-Dpackaging=jar" "-Dfile=D:\Mtime\jna.jar"
 //                        mvn install:install-file "-DgroupId=net.java.jna" "-DartifactId=examples" "-Dversion=1.0.0" "-Dpackaging=jar" "-Dfile=D:\Mtime\examples.jar"
 
-                        strDllPath = LibPathUtil.DLL_PATH + "HCNetSDK.dll";
+                        strDllPath = NvrConfigConstant.winLibPath + "HCNetSDK.dll";
                     } else if (osSelect.isLinux()) {
                         //Linux系统加载库路径
-                        libPath="/home/javaApps/hklib/";
-                        strDllPath = libPath + "libhcnetsdk.so";
+                        strDllPath = NvrConfigConstant.linuxLibPath + "libhcnetsdk.so";
                     }
                     hCNetSDK = (HCNetSDK) Native.loadLibrary(strDllPath, HCNetSDK.class);
                 } catch (Exception ex) {

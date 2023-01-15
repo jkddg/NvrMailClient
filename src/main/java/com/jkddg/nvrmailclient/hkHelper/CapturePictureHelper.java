@@ -4,7 +4,6 @@ import com.jkddg.nvrmailclient.HCNetSDK;
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.sun.jna.Memory;
-import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import lombok.extern.slf4j.Slf4j;
@@ -63,9 +62,9 @@ public class CapturePictureHelper {
             //图片质量
             HCNetSDK.NET_DVR_JPEGPARA jpeg = new HCNetSDK.NET_DVR_JPEGPARA();
             //设置图片分辨率
-            jpeg.wPicSize = NvrConfigConstant.captureImageSize;
+            jpeg.wPicSize = NvrConfigConstant.capturePicSize;
             //设置图片质量
-            jpeg.wPicQuality = 0;
+            jpeg.wPicQuality = NvrConfigConstant.capturePicQuality;
             //需要加入通道
 //            log.info("-----------这里开始封装 NET_DVR_CaptureJPEGPicture---------");
             boolean is = hCNetSDK.NET_DVR_CaptureJPEGPicture(lUserID, channelId, jpeg, path.getBytes());
