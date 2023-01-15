@@ -9,6 +9,7 @@ import com.jkddg.nvrmailclient.model.AlarmMailInfo;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Slf4j
 public class AlarmService {
 
-    Map<Integer,String> lockMap = new ConcurrentHashMap<>();
+    Map<Integer, String> lockMap = new ConcurrentHashMap<>();
     public static Queue<AlarmMailInfo> ALARM_QUEUE = new LinkedBlockingQueue<>();
 
     static Map<Integer, LocalDateTime> alarmTimeMap = new HashMap<>();//key=通道号，value=上次预警时间
@@ -33,9 +34,9 @@ public class AlarmService {
 
     public void alarmAppendQueue(int channel) {
         if (!lockMap.containsKey(channel)) {
-            lockMap.put(channel,new String("nvr-lock-"+channel));
+            lockMap.put(channel, new String("nvr-lock-" + channel));
         }
-        String lockObject=lockMap.get(channel);
+        String lockObject = lockMap.get(channel);
         synchronized (lockObject) {
             //判断预警间隔，太短的丢弃
             if (!alarmTimeMap.containsKey(channel)) {
@@ -86,16 +87,14 @@ public class AlarmService {
             }
 
             //2、通道截图
-            List<ChannelInfo> channels = new ArrayList<>();
-            channels.add(channelInfo);
             List<String> imageAll = new ArrayList<>();
             String picPrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss-"));
             for (int i = 0; i < NvrConfigConstant.captureCount; i++) {
-                List<String> imagePaths = capturePictureHelper.getNVRPicByConfigPath(picPrefix + (i + 1), channels);
-                if (CollectionUtils.isEmpty(imagePaths)) {
+                String imagePath = capturePictureHelper.getNVRPicByConfigPath(picPrefix + (i + 1), channelInfo);
+                if (StringUtils.isEmpty(imagePath)) {
                     log.warn("第" + i + 1 + "次抓图失败");
                 } else {
-                    imageAll.addAll(imagePaths);
+                    imageAll.add(imagePath);
                 }
                 try {
                     Thread.sleep(NvrConfigConstant.captureIntervalSecond * 1000);

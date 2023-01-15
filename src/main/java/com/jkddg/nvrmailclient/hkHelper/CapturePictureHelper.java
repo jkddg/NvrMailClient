@@ -10,10 +10,7 @@ import com.sun.jna.ptr.IntByReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +25,18 @@ import static com.jkddg.nvrmailclient.constant.SDKConstant.lUserID;
 @Slf4j
 public class CapturePictureHelper {
 
-    public List<String> getNVRPicByConfigPath(String indexNo, List<ChannelInfo> channels) {
+
+    FilenameFilter filter = new FilenameFilter() {
+        @Override
+        public boolean accept(File dir, String name) {
+            String filename = dir.getName();
+            return filename.indexOf(name) != -1;
+        }
+    };
+
+    public String getNVRPicByConfigPath(String indexNo, ChannelInfo channel) {
         String imgFolder = NvrConfigConstant.captureFolder;
-        return getNVRPic(imgFolder, indexNo, channels);
+        return getNVRPic(imgFolder, indexNo, channel);
 //        List<String> res = new ArrayList<>();
 //        for (ChannelInfo channel : channels) {
 //            String path = picCutCate(imgFolder, indexNo, channel);
@@ -44,53 +50,56 @@ public class CapturePictureHelper {
     /**
      * 抓拍图片
      *
-     * @param imgPath  图片路径
-     * @param channels 通道
+     * @param imgFolder   图片路径
+     * @param channelInfo 通道
      */
-    private List<String> getNVRPic(String imgPath, String indexNo, List<ChannelInfo> channels) {
+    private String getNVRPic(String imgFolder, String indexNo, ChannelInfo channelInfo) {
 //        log.info("-----------这里处理已经getNVRPic----------" + imgPath);
-        File file = new File(imgPath);
+        File file = new File(imgFolder);
         if (!file.exists()) {
             file.mkdir();
         }
-        List<String> capturePicturePath = new ArrayList<>();
-        if (CollectionUtils.isEmpty(channels)) {
+
+        if (channelInfo == null) {
             log.error("通道数据为空");
-            return capturePicturePath;
+            return null;
         }
         HCNetSDK.NET_DVR_WORKSTATE deviceWork = new HCNetSDK.NET_DVR_WORKSTATE();
         if (!hCNetSDK.NET_DVR_GetDVRWorkState(lUserID, deviceWork)) {
             // 返回Boolean值，判断是否获取设备能力
             log.error("hkSdk(抓图)-返回设备状态失败" + hCNetSDK.NET_DVR_GetLastError());
         }
-
-        channels.forEach(channelInfo -> {
-            int channelId = channelInfo.getNumber();
-            String path = imgPath + channelInfo.getName() + "-" + indexNo + ".jpeg";
-            //非内存直接保存
-            //图片质量
-            HCNetSDK.NET_DVR_JPEGPARA jpeg = new HCNetSDK.NET_DVR_JPEGPARA();
-            //设置图片分辨率
-            jpeg.wPicSize = NvrConfigConstant.capturePicSize;
-            //设置图片质量
-            jpeg.wPicQuality = NvrConfigConstant.capturePicQuality;
-            //需要加入通道
+        int channelId = channelInfo.getNumber();
+        String path = imgFolder + channelInfo.getName() + "-" + indexNo + ".jpeg";
+        //非内存直接保存
+        //图片质量
+        HCNetSDK.NET_DVR_JPEGPARA jpeg = new HCNetSDK.NET_DVR_JPEGPARA();
+        //设置图片分辨率
+        jpeg.wPicSize = NvrConfigConstant.capturePicSize;
+        //设置图片质量
+        jpeg.wPicQuality = NvrConfigConstant.capturePicQuality;
+        //需要加入通道
 //            log.info("-----------这里开始封装 NET_DVR_CaptureJPEGPicture---------");
-            boolean is = hCNetSDK.NET_DVR_CaptureJPEGPicture(lUserID, channelId, jpeg, path.getBytes());
-            log.info("-----------抓图结果----------" + is);
-            if (is) {
-                capturePicturePath.add(path);
-            } else {
-                log.info("hkSdk(抓图)-抓取失败,错误码:" + hCNetSDK.NET_DVR_GetLastError() + ",图片路径" + path);
+        boolean is = hCNetSDK.NET_DVR_CaptureJPEGPicture(lUserID, channelId, jpeg, path.getBytes());
+        if (is) {
+            log.info("hkSdk抓图成功----------");
+            file = new File(path);
+            if (!file.exists()) {
+                File[] files = file.listFiles(filter);
+                for (File file1 : files) {
+                    file1.renameTo(new File(path));
+                }
             }
-        });
-        log.info("-----------处理完成截图数据----------");
+            return path;
+        } else {
+            log.info("hkSdk(抓图)-抓取失败,错误码:" + hCNetSDK.NET_DVR_GetLastError() + ",图片路径" + path);
+            return null;
+        }
+
 //        //退出登录
 //        hCNetSDK.NET_DVR_Logout(lUserID);
 //        //释放SDK资源
 //        hCNetSDK.NET_DVR_Cleanup();
-
-        return capturePicturePath;
     }
 
 

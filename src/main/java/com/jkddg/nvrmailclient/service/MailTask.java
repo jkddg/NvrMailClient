@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +34,8 @@ public class MailTask {
 
     @Autowired
     MultipleMailService multipleMailService;
+
+
 
     @Scheduled(fixedRate = 5 * 1000)   //定时器定义，设置执行时间 1s
     private void checkMailThread() {
@@ -63,34 +66,26 @@ public class MailTask {
                         filePaths.addAll(alarmInfo.getImages());
                     }
                     if (!CollectionUtils.isEmpty(filePaths)) {
-                        boolean hasFile = false;
-                        for (String filePath : filePaths) {
-                            File file = new File(filePath);
-                            if (file.exists()) {
-                                hasFile = true;
-                                break;
-                            }
-                        }
-                        if (hasFile) {
-                            //3、发送邮件
-                            MailRequest mailRequest = new MailRequest();
-                            mailRequest.setSubject(SDKConstant.NvrName + "预警" + warnChannel);
-                            mailRequest.setSendTo(NvrConfigConstant.mailTo);
-                            mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
-                            mailRequest.setFilePath(filePaths);
-                            try {
-                                multipleMailService.sendMail(mailRequest);
-                                for (String filePath : filePaths) {
-                                    File file = new File(filePath);
-                                    if (file.exists()) {
-                                        file.delete();
-                                    }
+
+                        //3、发送邮件
+                        MailRequest mailRequest = new MailRequest();
+                        mailRequest.setSubject(SDKConstant.NvrName + "预警" + warnChannel);
+                        mailRequest.setSendTo(NvrConfigConstant.mailTo);
+                        mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
+                        mailRequest.setFilePath(filePaths);
+                        try {
+                            multipleMailService.sendMail(mailRequest);
+                            for (String filePath : filePaths) {
+                                File file = new File(filePath);
+                                if (file.exists()) {
+                                    file.delete();
                                 }
-                            } catch (Exception e) {
-//                    AlarmService.ALARM_QUEUE.add(mailInfo);
-                                log.error("发送邮件失败," + e.getMessage());
                             }
+                        } catch (Exception e) {
+                            //                  AlarmService.ALARM_QUEUE.add(mailInfo);
+                            log.error("发送邮件失败," + e.getMessage());
                         }
+
                     }
                 }
             }
