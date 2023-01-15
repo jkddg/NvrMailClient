@@ -57,7 +57,7 @@ public class CapturePictureHelper {
 
         channels.forEach(channelInfo -> {
             int channelId = channelInfo.getNumber();
-            String path = imgPath + channelInfo.getName() + "-" + channelId + "-" + indexNo + ".jpeg";
+            String path = imgPath + channelInfo.getName() + "-" + indexNo + ".jpeg";
             //非内存直接保存
             //图片质量
             HCNetSDK.NET_DVR_JPEGPARA jpeg = new HCNetSDK.NET_DVR_JPEGPARA();
