@@ -26,14 +26,6 @@ import static com.jkddg.nvrmailclient.constant.SDKConstant.lUserID;
 public class CapturePictureHelper {
 
 
-    FilenameFilter filter = new FilenameFilter() {
-        @Override
-        public boolean accept(File dir, String name) {
-            String filename = dir.getName();
-            return filename.indexOf(name) != -1;
-        }
-    };
-
     public String getNVRPicByConfigPath(String indexNo, ChannelInfo channel) {
         String imgFolder = NvrConfigConstant.captureFolder;
         return getNVRPic(imgFolder, indexNo, channel);
@@ -85,7 +77,14 @@ public class CapturePictureHelper {
             log.info("hkSdk抓图成功----------");
             file = new File(path);
             if (!file.exists()) {
-                File[] files = file.getParentFile().listFiles(filter);
+                File[] files = file.getParentFile().listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        String filename = dir.getPath() + File.separator + name;
+                        return filename.contains(path);
+                    };
+                });
+
                 for (File file1 : files) {
                     file1.renameTo(new File(path));
                 }
@@ -159,5 +158,23 @@ public class CapturePictureHelper {
         return null;
     }
 
+    public static void main(String[] args) {
+        String path = "D:\\capture\\aa.jpeg";
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                String filename =  dir.getPath() + File.separator + name;
+                return filename.contains(path);
+            }
+        };
+
+        File file = new File(path);
+        if (!file.exists()) {
+            File[] files = file.getParentFile().listFiles(filter);
+            for (File file1 : files) {
+                file1.renameTo(new File(path));
+            }
+        }
+    }
 
 }
