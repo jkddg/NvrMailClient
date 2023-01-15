@@ -92,7 +92,7 @@ public class AlarmService {
             for (int i = 0; i < NvrConfigConstant.captureCount; i++) {
                 String imagePath = capturePictureHelper.getNVRPicByConfigPath(picPrefix + (i + 1), channelInfo);
                 if (StringUtils.isEmpty(imagePath)) {
-                    log.warn("第" + i + 1 + "次抓图失败");
+                    log.warn("第" + (i + 1) + "次抓图失败");
                 } else {
                     imageAll.add(imagePath);
                 }
