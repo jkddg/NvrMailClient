@@ -1,3 +1,5 @@
+server:
+  port: 8080
 spring:
   #邮箱基本配置
   mail:
@@ -22,3 +24,47 @@ spring:
             required: false
           #开启debug模式，这样邮件发送过程的日志会在控制台打印出来，方便排查错误
         debug: true
+sender-email:
+  configs:
+    mail-0:
+      host: smtp.163.com
+      port: 25
+      username: jkddg2023@163.com
+      password: BYLQSOKYREAVFKJT
+      senderName: jkddg2023@163.com
+    mail-1:
+      host: smtp.163.com
+      port: 25
+      username: jkddg2024@163.com
+      password: IFSMYCDVPLHNQZOU
+      senderName: jkddg2024@163.com
+    mail-2:
+      host: smtp.163.com
+      port: 25
+      username: jkddg2025@163.com
+      password: KGDJGNDISLTUMVSW
+      senderName: jkddg2025@163.com
+
+nvr:
+  server:
+    ip: 192.168.50.51
+    port: 8000
+    user: admin
+    pwd: abcd123456
+  listen:
+    port: 7000
+  capture:
+    folder: d:\capture\
+    folder1: d:\capture1\
+    #当图像压缩分辨率为VGA时，支持0=CIF, 1=QCIF, 2=D1抓图，
+    #	当分辨率为3=UXGA(1600x1200), 4=SVGA(800x600), 5=HD720p(1280x720),6=VGA,7=XVGA, 8=HD900p
+    #	仅支持当前分辨率的抓图
+    size: 5
+    count: 3
+    sleep-second: 3
+  channel:
+    flash-minute: 5
+
+  alarm:
+    second: 20
+  mail-to: jkddg2022@163.com
