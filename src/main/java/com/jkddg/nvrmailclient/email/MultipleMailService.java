@@ -110,7 +110,7 @@ public class MultipleMailService {
                     File attachFile = new File(filePath);
                     if (attachFile.exists()) {
                         FileSystemResource file = new FileSystemResource(attachFile);
-                        String fileName = filePath.substring(filePath.lastIndexOf(File.separator));
+                        String fileName = filePath.substring(filePath.lastIndexOf(File.separator) + 1);
                         mimeMessageHelper.addAttachment(fileName, file);
                     }
                 }
