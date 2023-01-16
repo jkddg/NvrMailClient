@@ -21,7 +21,6 @@ public class NvrConfigConstant {
     public static short capturePicSize;
     public static int captureCount;
     public static int captureIntervalSecond;
-    public static int listenPort;
     public static String captureFolder;
     public static String captureFolderLinux;
     public static String captureFolderWin;
@@ -43,7 +42,6 @@ public class NvrConfigConstant {
         serverPort = Integer.parseInt(env.getProperty("nvr.server.port"));
         serverUser = env.getProperty("nvr.server.user");
         serverPwd = env.getProperty("nvr.server.pwd");
-        listenPort = Integer.parseInt(env.getProperty("nvr.listen.port"));
 //        captureFolder = env.getProperty("nvr.capture.folder");
         captureFolderWin = env.getProperty("nvr.capture.folder-win");
         captureFolderLinux = env.getProperty("nvr.capture.folder-linux");
