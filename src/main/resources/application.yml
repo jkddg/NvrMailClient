@@ -68,5 +68,5 @@ nvr:
     flash-minute: 5
 
   alarm:
-    second: 20
+    second: 60
   mail-to: jkddg2022@163.com
