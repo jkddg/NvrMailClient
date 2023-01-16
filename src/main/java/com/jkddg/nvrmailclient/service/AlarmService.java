@@ -53,7 +53,7 @@ public class AlarmService {
                         ChannelHelper.flashChannel();
                         channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
                         if (channelInfo == null) {
-                            log.warn("预警通道不在线，通道名：" + channelInfo.getName() + "，通道号：" + channel);
+                            log.warn("预警通道不在线，通道号：" + channel);
                             return;
                         }
                     }

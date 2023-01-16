@@ -1,3 +1,4 @@
+
 server:
   port: 8080
 spring:
@@ -70,3 +71,4 @@ nvr:
   alarm:
     second: 30
   mail-to: jkddg2022@163.com
+debug: true
