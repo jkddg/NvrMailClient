@@ -8,18 +8,23 @@ import com.jkddg.nvrmailclient.model.AlarmMailInfo;
 import com.jkddg.nvrmailclient.model.MailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -36,14 +41,14 @@ public class MailTask {
     MultipleMailService multipleMailService;
 
 
-
-    @Scheduled(fixedRate = 5 * 1000)   //定时器定义，设置执行时间 1s
-    private void checkMailThread() {
+    @Scheduled(fixedRate = 5 * 1000)   //定时器定义，设置执行时间 5s
+    @Async("taskPoolExecutor")
+    public void checkMailSend() {
         if (SDKConstant.lUserID > -1) {
             log.info("检查发送邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
             if (!AlarmService.ALARM_QUEUE.isEmpty()) {
                 Map<Integer, AlarmMailInfo> tempMailInfo = new HashMap<>();
-                for (int i = 0; i < 10; i++) {
+                while (!AlarmService.ALARM_QUEUE.isEmpty()) {
                     AlarmMailInfo mailInfo = AlarmService.ALARM_QUEUE.poll();
                     if (mailInfo == null) {
                         break;
@@ -85,10 +90,16 @@ public class MailTask {
                             //                  AlarmService.ALARM_QUEUE.add(mailInfo);
                             log.error("发送邮件失败," + e.getMessage());
                         }
-
                     }
                 }
             }
         }
     }
+
+    @Bean(name = "taskPoolExecutor")
+    public ExecutorService taskPoolExecutor() {
+        ExecutorService poolExecutor = new ThreadPoolExecutor(2, 4, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy());
+        return poolExecutor;
+    }
+
 }
