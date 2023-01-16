@@ -29,7 +29,6 @@ public class NvrMailClientApplication {
         log.info("capturePicSize=" + NvrConfigConstant.capturePicSize);
         log.info("captureCount=" + NvrConfigConstant.captureCount);
         log.info("captureIntervalSecond=" + NvrConfigConstant.captureIntervalSecond);
-        log.info("listenPort=" + NvrConfigConstant.listenPort);
         log.info("captureFolder=" + NvrConfigConstant.captureFolder);
         log.info("captureFolderLinux=" + NvrConfigConstant.captureFolderLinux);
         log.info("captureFolderWin=" + NvrConfigConstant.captureFolderWin);

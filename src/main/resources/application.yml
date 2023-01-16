@@ -53,8 +53,7 @@ nvr:
     port: 8000
     user: admin
     pwd: abcd123456
-  listen:
-    port: 7000
+
   capture:
     folder-win: d:\capture\
     folder-linux: /home/ssd/javaApps/capture/
