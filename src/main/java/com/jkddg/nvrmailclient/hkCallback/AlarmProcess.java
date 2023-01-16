@@ -7,6 +7,9 @@ import com.sun.jna.Pointer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * @Author 黄永好
@@ -18,17 +21,16 @@ public class AlarmProcess {
 
     AlarmService alarmService = new AlarmService();
 
-    public int getAlarmChannel(HCNetSDK.NET_DVR_ALARMINFO_V30 struAlarmInfo) {
-
+    public List<Integer> getAlarmChannel(HCNetSDK.NET_DVR_ALARMINFO_V30 struAlarmInfo) {
+        List<Integer> alarmChannels = new ArrayList<>();
         int[] channels = ByteUtil.byteArrayToIntArray(struAlarmInfo.byChannel);
-        int alarmChannel = 0;
         for (int i = 0; i < channels.length; i++) {
             if (channels[i] == 1) {
-                alarmChannel = i + 1;
-                break;
+                int alarmChannel = i + 1;
+                alarmChannels.add(alarmChannel);
             }
         }
-        return alarmChannel;
+        return alarmChannels;
     }
 
     public void process(int lCommand, HCNetSDK.NET_DVR_ALARMER pAlarmer, Pointer pAlarmInfo) {
@@ -41,7 +43,7 @@ public class AlarmProcess {
                 pAlarmInfo_V30.write(0, pAlarmInfo.getByteArray(0, struAlarmInfo.size()), 0, struAlarmInfo.size());
                 struAlarmInfo.read();
                 log.info("报警类型：" + struAlarmInfo.dwAlarmType);  // 3-移动侦测
-                int channel = getAlarmChannel(struAlarmInfo);
+                List<Integer> channel = getAlarmChannel(struAlarmInfo);
                 alarmService.alarmAppendQueue(channel);
                 break;
             case HCNetSDK.COMM_ALARM_V40: //移动侦测、视频丢失、遮挡、IO信号量等报警信息，报警数据为可变长

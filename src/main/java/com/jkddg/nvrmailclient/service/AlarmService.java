@@ -32,81 +32,65 @@ public class AlarmService {
     CapturePictureHelper capturePictureHelper = new CapturePictureHelper();
 
 
-    public void alarmAppendQueue(int channel) {
-        if (!lockMap.containsKey(channel)) {
-            lockMap.put(channel, new String("nvr-lock-" + channel));
-        }
-        String lockObject = lockMap.get(channel);
-        synchronized (lockObject) {
-            //判断预警间隔，太短的丢弃
-            if (!alarmTimeMap.containsKey(channel)) {
-                alarmTimeMap.put(channel, LocalDateTime.now());
-            } else {
-                LocalDateTime lastTime = alarmTimeMap.get(channel);
-                if (lastTime.isAfter(LocalDateTime.now().minusSeconds(NvrConfigConstant.alarmIntervalSecond))) {
-                    log.info("通道" + channel + "预警间隔不够" + NvrConfigConstant.alarmIntervalSecond + "秒，丢弃");
-                    return;
-                }
-            }
-
-            int iUserID = -1;
+    public void alarmAppendQueue(List<Integer> channels) {
+        if (!CollectionUtils.isEmpty(channels)) {
             if (SDKConstant.lUserID == -1) {
-                iUserID = LoginHelper.loginByConfig();
-            } else {
-                iUserID = SDKConstant.lUserID;
+                LoginHelper.loginByConfig();
             }
             if (SDKConstant.lUserID == -1) {
-                log.warn("用户未登录，结束处理预警发邮件");
+                log.warn("用户未登录，结束接收预警信息");
                 return;
             }
-            //1、判断通道是否在线
-            boolean hitChannel = false;
-            List<ChannelInfo> channelInfos = ChannelHelper.getOnLineIPChannels(iUserID);
-            ChannelInfo channelInfo = null;
-            for (int i = 0; i < channelInfos.size(); i++) {
-                if (channelInfos.get(i).getNumber() == channel) {
-                    hitChannel = true;
-                    channelInfo = channelInfos.get(i);
-                    break;
+            for (Integer channel : channels) {
+                if (!lockMap.containsKey(channel)) {
+                    lockMap.put(channel, new String("nvr-lock-" + channel));
                 }
-            }
-            if (!hitChannel) {
-                ChannelHelper.flashChannel(iUserID);
-                channelInfos = ChannelHelper.getOnLineIPChannels(iUserID);
-                for (int i = 0; i < channelInfos.size(); i++) {
-                    if (channelInfos.get(i).getNumber() == channel) {
-                        hitChannel = true;
-                        channelInfo = channelInfos.get(i);
-                        break;
+                String lockObject = lockMap.get(channel);
+                synchronized (lockObject) {
+                    //1、判断通道是否在线
+                    ChannelInfo channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
+                    if (channelInfo == null) {
+                        ChannelHelper.flashChannel();
+                        channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
+                        if (channelInfo == null) {
+                            log.warn("预警通道不在线，通道名：" + channelInfo.getName() + "，通道号：" + channel);
+                            return;
+                        }
+                    }
+                    //判断预警间隔，太短的丢弃
+                    if (!alarmTimeMap.containsKey(channel)) {
+                        alarmTimeMap.put(channel, LocalDateTime.now());
+                    } else {
+                        LocalDateTime lastTime = alarmTimeMap.get(channel);
+                        if (lastTime.isAfter(LocalDateTime.now().minusSeconds(NvrConfigConstant.alarmIntervalSecond))) {
+                            log.info("通道名：" + channelInfo.getName() + "，通道号：" + channel + "预警间隔不够" + NvrConfigConstant.alarmIntervalSecond + "秒，丢弃");
+                            return;
+                        }
+                    }
+
+                    //2、通道截图
+                    List<String> imageAll = new ArrayList<>();
+                    String picPrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss-"));
+                    for (int i = 0; i < NvrConfigConstant.captureCount; i++) {
+                        String imagePath = capturePictureHelper.getNVRPicByConfigPath(picPrefix + (i + 1), channelInfo);
+                        if (StringUtils.isEmpty(imagePath)) {
+                            log.warn("第" + (i + 1) + "次抓图失败");
+                        } else {
+                            imageAll.add(imagePath);
+                        }
+                        try {
+                            Thread.sleep(NvrConfigConstant.captureIntervalSecond * 1000);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    AlarmMailInfo alarmMailInfo = new AlarmMailInfo();
+                    alarmMailInfo.setChannel(channelInfo);
+                    alarmMailInfo.setImages(imageAll);
+                    if (!CollectionUtils.isEmpty(imageAll)) {
+                        ALARM_QUEUE.add(alarmMailInfo);
                     }
                 }
-                if (!hitChannel) {
-                    log.warn("预警通道不在线，通道号：" + channel);
-                    return;
-                }
-            }
-
-            //2、通道截图
-            List<String> imageAll = new ArrayList<>();
-            String picPrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss-"));
-            for (int i = 0; i < NvrConfigConstant.captureCount; i++) {
-                String imagePath = capturePictureHelper.getNVRPicByConfigPath(picPrefix + (i + 1), channelInfo);
-                if (StringUtils.isEmpty(imagePath)) {
-                    log.warn("第" + (i + 1) + "次抓图失败");
-                } else {
-                    imageAll.add(imagePath);
-                }
-                try {
-                    Thread.sleep(NvrConfigConstant.captureIntervalSecond * 1000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            AlarmMailInfo alarmMailInfo = new AlarmMailInfo();
-            alarmMailInfo.setChannel(channelInfo);
-            alarmMailInfo.setImages(imageAll);
-            if (!CollectionUtils.isEmpty(imageAll)) {
-                ALARM_QUEUE.add(alarmMailInfo);
             }
         }
     }

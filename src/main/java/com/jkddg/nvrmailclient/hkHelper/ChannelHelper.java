@@ -2,6 +2,7 @@ package com.jkddg.nvrmailclient.hkHelper;
 
 import com.jkddg.nvrmailclient.HCNetSDK;
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
+import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
@@ -92,11 +93,23 @@ public class ChannelHelper {
     }
 
 
+    public static ChannelInfo getOnlineChannelInfoByNo(int channel) {
+        List<ChannelInfo> channelInfoList = getOnLineIPChannels(lUserID);
+        if (!CollectionUtils.isEmpty(channelInfoList)) {
+            for (ChannelInfo channelInfo : channelInfoList) {
+                if (channelInfo.getNumber() == channel) {
+                    return channelInfo;
+                }
+            }
+        }
+        return null;
+    }
+
     public static List<ChannelInfo> getOnLineIPChannels(int iUserID) {
         if (CollectionUtils.isEmpty(channelInfos)) {
             initChannel(iUserID);
         }
-        flashChannel(iUserID);
+        flashChannel();
         return channelInfos.stream().filter(p -> p.isOnLine()).collect(Collectors.toList());
     }
 
@@ -111,16 +124,16 @@ public class ChannelHelper {
     /**
      * 一分钟刷新一次在线通道信息
      *
-     * @param iUserID
      */
-    public static void flashChannel(int iUserID) {
+    public static void flashChannel() {
         log.info("刷新通道-UserId=" + lUserID + ",time=" + LocalDateTime.now());
-        if (iUserID == -1) {
+        if (lUserID == -1) {
             return;
         }
         if (initChannelTime == null || initChannelTime.isBefore(LocalDateTime.now().minusMinutes(NvrConfigConstant.channelFlashMinute))) {
-            initChannel(iUserID);
+            initChannel(lUserID);
             initChannelTime = LocalDateTime.now();
+            log.info("刷新通道完成-UserId=" + lUserID + ",time=" + LocalDateTime.now());
         }
     }
 
