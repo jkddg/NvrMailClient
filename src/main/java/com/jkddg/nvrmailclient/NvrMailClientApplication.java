@@ -50,15 +50,10 @@ public class NvrMailClientApplication {
         } else {
             log.info("登录失败");
         }
+
     }
 
-    @PreDestroy
-    public void preDestroy() {
-        AlarmHelper.EndAlarm();
-        SDKConstant.hCNetSDK.NET_DVR_Logout(SDKConstant.lUserID);
-        //释放SDK资源
-        SDKConstant.hCNetSDK.NET_DVR_Cleanup();
-    }
+
 
 
 }
