@@ -34,7 +34,7 @@ public class AlarmProcess {
     }
 
     public void process(int lCommand, HCNetSDK.NET_DVR_ALARMER pAlarmer, Pointer pAlarmInfo) {
-        log.info("录像机回调类型编码：" + lCommand);
+//        log.info("录像机回调类型编码：" + lCommand);
         switch (lCommand) {
             case HCNetSDK.COMM_ALARM_V30:  //移动侦测、视频丢失、遮挡、IO信号量等报警信息(V3.0以上版本支持的设备)
                 HCNetSDK.NET_DVR_ALARMINFO_V30 struAlarmInfo = new HCNetSDK.NET_DVR_ALARMINFO_V30();
@@ -42,7 +42,7 @@ public class AlarmProcess {
                 Pointer pAlarmInfo_V30 = struAlarmInfo.getPointer();
                 pAlarmInfo_V30.write(0, pAlarmInfo.getByteArray(0, struAlarmInfo.size()), 0, struAlarmInfo.size());
                 struAlarmInfo.read();
-                log.info("报警类型：" + struAlarmInfo.dwAlarmType);  // 3-移动侦测
+//                log.info("报警类型：" + struAlarmInfo.dwAlarmType);  // 3-移动侦测
                 List<Integer> channel = getAlarmChannel(struAlarmInfo);
                 alarmService.alarmAppendQueue(channel);
                 break;
