@@ -8,12 +8,9 @@ import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.CollectionUtils;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.jkddg.nvrmailclient.constant.SDKConstant.hCNetSDK;
 import static com.jkddg.nvrmailclient.constant.SDKConstant.lUserID;

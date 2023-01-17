@@ -11,8 +11,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import javax.annotation.PreDestroy;
-
 @Slf4j
 @EnableScheduling
 @SpringBootApplication
@@ -51,6 +49,16 @@ public class NvrMailClientApplication {
             log.info("登录失败");
         }
 
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                log.info("调用preDestroy资源回收");
+                AlarmHelper.EndAlarm();
+                SDKConstant.hCNetSDK.NET_DVR_Logout(SDKConstant.lUserID);
+                //释放SDK资源
+                SDKConstant.hCNetSDK.NET_DVR_Cleanup();
+            }
+        }));
     }
 
 

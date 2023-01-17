@@ -1,27 +1,10 @@
 package com.jkddg.nvrmailclient.service;
 
-import com.jkddg.nvrmailclient.DisposeSdk;
-import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
-import com.jkddg.nvrmailclient.constant.SDKConstant;
-import com.jkddg.nvrmailclient.email.MultipleMailService;
-import com.jkddg.nvrmailclient.email.SimpleMailService;
-import com.jkddg.nvrmailclient.model.AlarmMailInfo;
-import com.jkddg.nvrmailclient.model.MailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

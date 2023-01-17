@@ -2,7 +2,6 @@ package com.jkddg.nvrmailclient.hkHelper;
 
 import com.jkddg.nvrmailclient.HCNetSDK;
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
-import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
