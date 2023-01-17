@@ -126,7 +126,7 @@ public class ChannelHelper {
      *
      */
     public static void flashChannel() {
-        log.info("刷新通道-UserId=" + lUserID + ",time=" + LocalDateTime.now());
+//        log.info("刷新通道-UserId=" + lUserID + ",time=" + LocalDateTime.now());
         if (lUserID == -1) {
             return;
         }
