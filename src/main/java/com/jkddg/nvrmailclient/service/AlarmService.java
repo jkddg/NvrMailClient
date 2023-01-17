@@ -94,7 +94,6 @@ public class AlarmService {
                         ALARM_QUEUE.add(alarmMailInfo);
                         MailService mailService = SpringUtil.getBean(MailService.class);
                         if (mailService != null) {
-                            mailService.checkAndSendMail();
                             if (lastMailTime == null || lastMailTime.isBefore(LocalDateTime.now().minusSeconds(NvrConfigConstant.mailIntervalSecond))) {
                                 mailService.checkAndSendMail();
                             }
