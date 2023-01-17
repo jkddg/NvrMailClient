@@ -32,6 +32,7 @@ public class NvrConfigConstant {
     public static int channelFlashMinute = 5;
     public static String linuxLibPath;
     public static String winLibPath;
+    public static int mailIntervalSecond;
 
     @PostConstruct
     public void readConfig() {
@@ -47,7 +48,8 @@ public class NvrConfigConstant {
         captureFolderLinux = env.getProperty("nvr.capture.folder-linux");
         capturePicSize = Short.parseShort(env.getProperty("nvr.capture.pic-size"));
         captureCount = Integer.parseInt(env.getProperty("nvr.capture.count"));
-        alarmIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.second"));
+        alarmIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.interval-second"));
+        mailIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.mail-interval-second"));
         mailTo = env.getProperty("nvr.mail-to");
         mailSSl = Boolean.parseBoolean(env.getProperty("jakarta.mail.ssl"));
         captureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.sleep-second"));

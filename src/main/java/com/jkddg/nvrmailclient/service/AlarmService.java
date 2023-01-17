@@ -7,6 +7,7 @@ import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.hkHelper.LoginHelper;
 import com.jkddg.nvrmailclient.model.AlarmMailInfo;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
+import com.jkddg.nvrmailclient.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -30,6 +31,8 @@ public class AlarmService {
     static Map<Integer, LocalDateTime> alarmTimeMap = new HashMap<>();//key=通道号，value=上次预警时间
 
     CapturePictureHelper capturePictureHelper = new CapturePictureHelper();
+
+    private static LocalDateTime lastMailTime = null;
 
 
     public void alarmAppendQueue(List<Integer> channels) {
@@ -89,6 +92,13 @@ public class AlarmService {
                     alarmMailInfo.setImages(imageAll);
                     if (!CollectionUtils.isEmpty(imageAll)) {
                         ALARM_QUEUE.add(alarmMailInfo);
+                        MailService mailService = SpringUtil.getBean(MailService.class);
+                        if (mailService != null) {
+                            mailService.checkAndSendMail();
+                            if (lastMailTime == null || lastMailTime.isBefore(LocalDateTime.now().minusSeconds(NvrConfigConstant.mailIntervalSecond))) {
+                                mailService.checkAndSendMail();
+                            }
+                        }
                     }
                 }
             }
