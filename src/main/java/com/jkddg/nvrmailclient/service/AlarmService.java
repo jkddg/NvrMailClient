@@ -53,16 +53,6 @@ public class AlarmService {
                         }
                         String lockObject = lockMap.get(channel);
                         synchronized (lockObject) {
-                            //1、判断通道是否在线
-                            ChannelInfo channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
-                            if (channelInfo == null) {
-                                ChannelHelper.flashChannel();
-                                channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
-                                if (channelInfo == null) {
-                                    log.warn("预警通道不在线，通道号：" + channel);
-                                    return;
-                                }
-                            }
                             //判断预警间隔，太短的丢弃
                             if (!alarmTimeMap.containsKey(channel)) {
                                 alarmTimeMap.put(channel, LocalDateTime.now());
@@ -70,6 +60,17 @@ public class AlarmService {
                                 LocalDateTime lastTime = alarmTimeMap.get(channel);
                                 if (lastTime.isAfter(LocalDateTime.now().minusSeconds(NvrConfigConstant.alarmIntervalSecond))) {
 //                            log.info("通道名：" + channelInfo.getName() + "，通道号：" + channel + "预警间隔不够" + NvrConfigConstant.alarmIntervalSecond + "秒，丢弃");
+                                    return;
+                                }
+                            }
+
+                            //1、判断通道是否在线
+                            ChannelInfo channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
+                            if (channelInfo == null) {
+                                ChannelHelper.flashChannel();
+                                channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
+                                if (channelInfo == null) {
+                                    log.warn("预警通道不在线，通道号：" + channel);
                                     return;
                                 }
                             }
