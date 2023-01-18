@@ -62,9 +62,15 @@ public class CapturePictureHelper {
         jpeg.wPicQuality = NvrConfigConstant.capturePicQuality;
         //需要加入通道
 //            log.info("-----------这里开始封装 NET_DVR_CaptureJPEGPicture---------");
-        boolean is = hCNetSDK.NET_DVR_CaptureJPEGPicture(lUserID, channelId, jpeg, path.getBytes());
+        boolean is = false;
+        try {
+            is = hCNetSDK.NET_DVR_CaptureJPEGPicture(lUserID, channelId, jpeg, path.getBytes("GBK"));
+
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         if (is) {
-            log.info("hkSdk抓图成功----------");
+            log.info("hkSdk抓图成功--" + channelInfo.getName() + "-" + indexNo + ".jpg".trim());
             file = new File(path);
             if (!file.exists()) {
                 log.warn("抓图文件名异常:" + path);

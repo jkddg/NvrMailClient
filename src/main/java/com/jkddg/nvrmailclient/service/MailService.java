@@ -26,9 +26,9 @@ import java.util.Map;
 @Component
 public class MailService {
 
-//    @Autowired
+    //    @Autowired
 //    private SimpleMailService mailService;
-
+//    private static Object lockObj = new Object();
     @Autowired
     private MultipleMailService multipleMailService;
 
@@ -74,7 +74,7 @@ public class MailService {
                         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
                         //3、发送邮件
                         MailRequest mailRequest = new MailRequest();
-                        mailRequest.setSubject(SDKConstant.NvrName + "预警" + warnChannel);
+                        mailRequest.setSubject(SDKConstant.NvrName + "预警-" + warnChannel);
                         mailRequest.setSendTo(NvrConfigConstant.mailTo);
                         mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
                         mailRequest.setFilePath(filePaths);

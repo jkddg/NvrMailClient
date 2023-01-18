@@ -97,15 +97,17 @@ public class AlarmService {
                             if (!CollectionUtils.isEmpty(imageAll)) {
                                 ALARM_QUEUE.add(alarmMailInfo);
                                 MailService mailService = SpringUtil.getBean(MailService.class);
-                                if (mailService != null) {
-                                    if (lastMailTime == null || lastMailTime.isBefore(LocalDateTime.now().minusSeconds(NvrConfigConstant.mailIntervalSecond))) {
-                                        mailService.checkAndSendMail();
-                                    }
-                                }
+                                mailService.checkAndSendMail();
+//                                if (mailService != null) {
+//                                    if (lastMailTime == null || lastMailTime.isBefore(LocalDateTime.now().minusSeconds(NvrConfigConstant.mailIntervalSecond))) {
+//                                        lastMailTime = LocalDateTime.now();
+//                                        mailService.checkAndSendMail();
+//                                    }
+//                                }
                             }
                         }
                     }
-                }).run();
+                }).start();
             }
         }
     }
