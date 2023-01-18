@@ -13,10 +13,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Author 黄永好
@@ -29,20 +26,41 @@ public class MailService {
     //    @Autowired
 //    private SimpleMailService mailService;
 //    private static Object lockObj = new Object();
+    private static LocalDateTime lastMailTime = null;
+    private static TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+        }
+    };
     @Autowired
     private MultipleMailService multipleMailService;
 
-    public MailService() {
-//                        MailcapCommandMap mc = (MailcapCommandMap)CommandMap.getDefaultCommandMap();
-//                        mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
-//                        mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
-//                        mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
-//                        mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
-//                        mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
-//                        CommandMap.setDefaultCommandMap(mc);
-    }
 
     public void checkAndSendMail() {
+        if (lastMailTime == null) {
+            lastMailTime = LocalDateTime.now();
+        }
+        if (lastMailTime.isBefore(LocalDateTime.now().minusSeconds(NvrConfigConstant.mailIntervalSecond))) {
+            //立即执行
+            log.info("邮件立即发送");
+            lastMailTime = LocalDateTime.now();
+            sendMail();
+        } else {
+            // 每次进来都清零
+            timerTask.cancel();
+            // 然后创建一个新的任务
+            timerTask = new TimerTask() {
+                public void run() {
+                    log.info("邮件延时发送");
+                    sendMail();
+                }
+            };
+            // 执行任务
+            new Timer().schedule(timerTask, 2000);
+        }
+    }
+
+    private void sendMail() {
         if (SDKConstant.lUserID > -1) {
             log.info("检查发送邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
             if (!AlarmService.ALARM_QUEUE.isEmpty()) {

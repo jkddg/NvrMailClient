@@ -32,7 +32,7 @@ public class AlarmService {
 
     CapturePictureHelper capturePictureHelper = new CapturePictureHelper();
 
-    private static LocalDateTime lastMailTime = null;
+
 
 
     public void alarmAppendQueue(List<Integer> channels) {
@@ -98,12 +98,6 @@ public class AlarmService {
                                 ALARM_QUEUE.add(alarmMailInfo);
                                 MailService mailService = SpringUtil.getBean(MailService.class);
                                 mailService.checkAndSendMail();
-//                                if (mailService != null) {
-//                                    if (lastMailTime == null || lastMailTime.isBefore(LocalDateTime.now().minusSeconds(NvrConfigConstant.mailIntervalSecond))) {
-//                                        lastMailTime = LocalDateTime.now();
-//                                        mailService.checkAndSendMail();
-//                                    }
-//                                }
                             }
                         }
                     }
