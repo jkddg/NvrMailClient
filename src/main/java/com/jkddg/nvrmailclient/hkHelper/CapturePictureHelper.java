@@ -64,7 +64,7 @@ public class CapturePictureHelper {
 //            log.info("-----------这里开始封装 NET_DVR_CaptureJPEGPicture---------");
         boolean is = false;
         try {
-            is = hCNetSDK.NET_DVR_CaptureJPEGPicture(lUserID, channelId, jpeg, path.getBytes("GBK"));
+            is = hCNetSDK.NET_DVR_CaptureJPEGPicture(lUserID, channelId, jpeg, path.getBytes("UTF-8"));
 
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);

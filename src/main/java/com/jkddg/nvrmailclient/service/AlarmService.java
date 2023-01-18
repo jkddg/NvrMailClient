@@ -33,8 +33,6 @@ public class AlarmService {
     CapturePictureHelper capturePictureHelper = new CapturePictureHelper();
 
 
-
-
     public void alarmAppendQueue(List<Integer> channels) {
         if (!CollectionUtils.isEmpty(channels)) {
             if (SDKConstant.lUserID == -1) {
@@ -48,22 +46,21 @@ public class AlarmService {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        //判断预警间隔，太短的丢弃
+                        if (!alarmTimeMap.containsKey(channel)) {
+                            alarmTimeMap.put(channel, LocalDateTime.now());
+                        } else {
+                            LocalDateTime lastTime = alarmTimeMap.get(channel);
+                            if (lastTime.isAfter(LocalDateTime.now().minusSeconds(NvrConfigConstant.alarmIntervalSecond))) {
+//                            log.info("通道名：" + channelInfo.getName() + "，通道号：" + channel + "预警间隔不够" + NvrConfigConstant.alarmIntervalSecond + "秒，丢弃");
+                                return;
+                            }
+                        }
                         if (!lockMap.containsKey(channel)) {
                             lockMap.put(channel, new String("nvr-lock-" + channel));
                         }
                         String lockObject = lockMap.get(channel);
                         synchronized (lockObject) {
-                            //判断预警间隔，太短的丢弃
-                            if (!alarmTimeMap.containsKey(channel)) {
-                                alarmTimeMap.put(channel, LocalDateTime.now());
-                            } else {
-                                LocalDateTime lastTime = alarmTimeMap.get(channel);
-                                if (lastTime.isAfter(LocalDateTime.now().minusSeconds(NvrConfigConstant.alarmIntervalSecond))) {
-//                            log.info("通道名：" + channelInfo.getName() + "，通道号：" + channel + "预警间隔不够" + NvrConfigConstant.alarmIntervalSecond + "秒，丢弃");
-                                    return;
-                                }
-                            }
-
                             //1、判断通道是否在线
                             ChannelInfo channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
                             if (channelInfo == null) {
@@ -91,6 +88,7 @@ public class AlarmService {
                                     throw new RuntimeException(e);
                                 }
                             }
+                            alarmTimeMap.put(channel, LocalDateTime.now());
                             AlarmMailInfo alarmMailInfo = new AlarmMailInfo();
                             alarmMailInfo.setChannel(channelInfo);
                             alarmMailInfo.setImages(imageAll);

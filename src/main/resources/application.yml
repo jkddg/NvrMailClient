@@ -47,7 +47,9 @@ sender-email:
 
 nvr:
   linux-lib-path: /home/javaApps/hklib/
+  linux-sdk-log: /home/javaApps/nvrMailApp/sdkLog
   win-lib-path: D:\hklib\
+  win-sdk-log: D:\sdkLog
   server:
     ip: 192.168.50.51
     port: 8000

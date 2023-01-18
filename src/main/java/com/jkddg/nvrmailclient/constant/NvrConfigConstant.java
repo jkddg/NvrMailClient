@@ -24,6 +24,8 @@ public class NvrConfigConstant {
     public static String captureFolder;
     public static String captureFolderLinux;
     public static String captureFolderWin;
+    public static String sdkLogLinux;
+    public static String sdkLogWin;
     public static short capturePicQuality = 0;
     public static int alarmIntervalSecond;
     public static String mailTo;
@@ -55,5 +57,7 @@ public class NvrConfigConstant {
         captureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.sleep-second"));
         channelFlashMinute = Integer.parseInt(env.getProperty("nvr.channel.flash-minute"));
         capturePicQuality = Short.parseShort(env.getProperty("nvr.capture.pic-quality"));
+        sdkLogWin = env.getProperty("nvr.win-sdk-log");
+        sdkLogLinux = env.getProperty("nvr.linux-sdk-log");
     }
 }

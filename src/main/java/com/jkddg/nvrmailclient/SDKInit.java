@@ -16,6 +16,7 @@ import static com.jkddg.nvrmailclient.constant.SDKConstant.hCNetSDK;
 public class SDKInit {
 
     public static FExceptionCallBack_Imp fExceptionCallBack;
+    private static String sdkLogDir = "./sdkLog";
 
     static class FExceptionCallBack_Imp implements HCNetSDK.FExceptionCallBack {
         public void invoke(int dwType, int lUserID, int lHandle, Pointer pUser) {
@@ -91,7 +92,8 @@ public class SDKInit {
         log.info("设置异常消息回调成功");
 
         //启动SDK写日志
-        hCNetSDK.NET_DVR_SetLogToFile(3, "./sdkLog", false);
+
+        hCNetSDK.NET_DVR_SetLogToFile(3, sdkLogDir, false);
 
 //        SDKHelper.login_V40("192.168.50.51", (short) 8000, "admin", "abcd123456");
 
@@ -117,10 +119,12 @@ public class SDKInit {
 
                         NvrConfigConstant.captureFolder = NvrConfigConstant.captureFolderWin;
                         strDllPath = NvrConfigConstant.winLibPath + "HCNetSDK.dll";
+                        sdkLogDir = NvrConfigConstant.sdkLogWin;
                     } else if (osSelect.isLinux()) {
                         //Linux系统加载库路径
                         NvrConfigConstant.captureFolder = NvrConfigConstant.captureFolderLinux;
                         strDllPath = NvrConfigConstant.linuxLibPath + "libhcnetsdk.so";
+                        sdkLogDir = NvrConfigConstant.sdkLogLinux;
                     }
                     hCNetSDK = (HCNetSDK) Native.loadLibrary(strDllPath, HCNetSDK.class);
 
