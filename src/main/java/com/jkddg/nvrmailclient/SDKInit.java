@@ -85,6 +85,7 @@ public class SDKInit {
         }
         Pointer pUser = null;
         if (!hCNetSDK.NET_DVR_SetExceptionCallBack_V30(0, 0, fExceptionCallBack, pUser)) {
+            log.info("设置异常消息回调失败");
             return;
         }
         log.info("设置异常消息回调成功");
