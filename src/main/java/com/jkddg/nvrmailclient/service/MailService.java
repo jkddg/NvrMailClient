@@ -32,7 +32,7 @@ public class MailService {
     @Autowired
     private MultipleMailService multipleMailService;
 
-    public MailService(){
+    public MailService() {
 //                        MailcapCommandMap mc = (MailcapCommandMap)CommandMap.getDefaultCommandMap();
 //                        mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
 //                        mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
@@ -66,7 +66,7 @@ public class MailService {
                         if (StringUtils.hasText(warnChannel)) {
                             warnChannel = warnChannel + "-";
                         }
-                        warnChannel = warnChannel + alarmInfo.getChannel().getName();
+                        warnChannel = warnChannel + alarmInfo.getChannel().getName() + "(" + alarmInfo.getChannel().getNumber() + ")";
                         filePaths.addAll(alarmInfo.getImages());
                     }
                     if (!CollectionUtils.isEmpty(filePaths)) {
