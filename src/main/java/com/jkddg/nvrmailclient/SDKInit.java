@@ -20,7 +20,6 @@ public class SDKInit {
     static class FExceptionCallBack_Imp implements HCNetSDK.FExceptionCallBack {
         public void invoke(int dwType, int lUserID, int lHandle, Pointer pUser) {
             log.info("异常事件类型:" + dwType);
-            return;
         }
     }
 

@@ -1,7 +1,6 @@
 package com.jkddg.nvrmailclient;
 
 
-import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.hkHelper.AlarmHelper;
 import com.jkddg.nvrmailclient.hkHelper.ConfigHelper;
