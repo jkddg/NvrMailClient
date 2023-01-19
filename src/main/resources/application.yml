@@ -57,6 +57,7 @@ nvr:
     pwd: abcd123456
 
   capture:
+    in-memory: true
     folder-win: d:\capture\
     folder-linux: /home/javaApps/capture/
     #当图像压缩分辨率为VGA时，支持0=CIF, 1=QCIF, 2=D1抓图，

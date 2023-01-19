@@ -32,6 +32,11 @@ public class MailRequest {
     /**
      * 附件路径
      */
-    private List<String> filePath;
+    private List<String> fileAttachments;
+
+    /**
+     * 附件
+     */
+    private List<MailAttachment> streamAttachments;
 
 }

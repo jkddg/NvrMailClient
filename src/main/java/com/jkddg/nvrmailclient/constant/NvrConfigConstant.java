@@ -35,6 +35,7 @@ public class NvrConfigConstant {
     public static String linuxLibPath;
     public static String winLibPath;
     public static int mailIntervalSecond;
+    public static boolean captureInMemory = true;
 
     @PostConstruct
     public void readConfig() {
@@ -59,5 +60,6 @@ public class NvrConfigConstant {
         capturePicQuality = Short.parseShort(env.getProperty("nvr.capture.pic-quality"));
         sdkLogWin = env.getProperty("nvr.win-sdk-log");
         sdkLogLinux = env.getProperty("nvr.linux-sdk-log");
+        captureInMemory = Boolean.parseBoolean(env.getProperty("nvr.capture.in-memory"));
     }
 }

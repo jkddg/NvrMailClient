@@ -1,5 +1,6 @@
 package com.jkddg.nvrmailclient.email;
 
+import com.jkddg.nvrmailclient.model.MailAttachment;
 import com.jkddg.nvrmailclient.model.MailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ public class MultipleMailService {
         try {
             JavaMailSenderImpl javaMailSender = getJavaMailSender();
             userName = javaMailSender.getUsername();
-            MimeMessage mimeMessage = getMimeMessage(javaMailSender.getUsername(), mailRequest.getSendTo(), mailRequest.getSubject(), mailRequest.getText(), mailRequest.getFilePath(), javaMailSender);
+            MimeMessage mimeMessage = getMimeMessage(javaMailSender.getUsername(), mailRequest.getSendTo(), mailRequest.getSubject(), mailRequest.getText(), mailRequest.getStreamAttachments(), mailRequest.getFileAttachments(), javaMailSender);
             //11、发送邮件
             javaMailSender.send(mimeMessage);
             log.info(javaMailSender.getUsername() + "发往 " + mailRequest.getSendTo() + " 邮件发送成功");
@@ -91,7 +92,7 @@ public class MultipleMailService {
     }
 
     //声明一个Message对象(代表一封邮件),从session中创建
-    private MimeMessage getMimeMessage(String username, String toEmail, String subject, String text, List<String> filePaths, JavaMailSenderImpl javaMailSender) throws MessagingException {
+    private MimeMessage getMimeMessage(String username, String toEmail, String subject, String text, List<MailAttachment> attachments, List<String> filePaths, JavaMailSenderImpl javaMailSender) throws MessagingException {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -104,6 +105,14 @@ public class MultipleMailService {
         mimeMessageHelper.setSubject(subject);
         //邮件内容
         mimeMessageHelper.setText(text, true);
+        mimeMessageHelper.getFileTypeMap().getContentType(".jpg");
+        if (!CollectionUtils.isEmpty(attachments)) {
+            for (MailAttachment attachment : attachments) {
+                if (attachment != null && attachment.getDataSource() != null) {
+                    mimeMessageHelper.addAttachment(attachment.getName(), attachment.getDataSource());
+                }
+            }
+        }
         if (!CollectionUtils.isEmpty(filePaths)) {
             for (String filePath : filePaths) {
                 if (StringUtils.hasText(filePath)) {

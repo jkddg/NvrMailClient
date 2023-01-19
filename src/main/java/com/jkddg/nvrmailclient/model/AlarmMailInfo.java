@@ -13,7 +13,8 @@ import java.util.List;
 @Setter
 public class AlarmMailInfo {
     ChannelInfo channel;
-    List<String> images;
+    List<String> fileImages;
+    List<MailAttachment> streamImages;
 
 
 }

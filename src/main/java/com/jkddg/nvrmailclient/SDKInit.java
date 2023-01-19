@@ -1,6 +1,7 @@
 package com.jkddg.nvrmailclient;
 
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
+import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.util.osSelect;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -120,11 +121,13 @@ public class SDKInit {
                         NvrConfigConstant.captureFolder = NvrConfigConstant.captureFolderWin;
                         strDllPath = NvrConfigConstant.winLibPath + "HCNetSDK.dll";
                         sdkLogDir = NvrConfigConstant.sdkLogWin;
+                        SDKConstant.charsetName = "GBK";
                     } else if (osSelect.isLinux()) {
                         //Linux系统加载库路径
                         NvrConfigConstant.captureFolder = NvrConfigConstant.captureFolderLinux;
                         strDllPath = NvrConfigConstant.linuxLibPath + "libhcnetsdk.so";
                         sdkLogDir = NvrConfigConstant.sdkLogLinux;
+                        SDKConstant.charsetName = "UTF-8";
                     }
                     hCNetSDK = (HCNetSDK) Native.loadLibrary(strDllPath, HCNetSDK.class);
 

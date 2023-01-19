@@ -74,8 +74,8 @@ public class SimpleMailService {
             //邮件发送时间
             helper.setSentDate(new Date());
 
-            if (!CollectionUtils.isEmpty(mailRequest.getFilePath())) {
-                for (String filePath : mailRequest.getFilePath()) {
+            if (!CollectionUtils.isEmpty(mailRequest.getFileAttachments())) {
+                for (String filePath : mailRequest.getFileAttachments()) {
                     if (StringUtils.hasText(filePath)) {
                         File attachFile = new File(filePath);
                         if (attachFile.exists()) {

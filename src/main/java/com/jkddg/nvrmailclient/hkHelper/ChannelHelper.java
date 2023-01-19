@@ -122,7 +122,6 @@ public class ChannelHelper {
 
     /**
      * 一分钟刷新一次在线通道信息
-     *
      */
     public static void flashChannel() {
 //        log.info("刷新通道-UserId=" + lUserID + ",time=" + LocalDateTime.now());

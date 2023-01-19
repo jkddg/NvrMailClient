@@ -4,6 +4,7 @@ import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.email.MultipleMailService;
 import com.jkddg.nvrmailclient.model.AlarmMailInfo;
+import com.jkddg.nvrmailclient.model.MailAttachment;
 import com.jkddg.nvrmailclient.model.MailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,21 +74,23 @@ public class MailService {
                     if (!tempMailInfo.containsKey(mailInfo.getChannel().getNumber())) {
                         tempMailInfo.put(mailInfo.getChannel().getNumber(), mailInfo);
                     } else {
-                        tempMailInfo.get(mailInfo.getChannel().getNumber()).getImages().addAll(mailInfo.getImages());
+                        tempMailInfo.get(mailInfo.getChannel().getNumber()).getFileImages().addAll(mailInfo.getFileImages());
                     }
                 }
                 if (!tempMailInfo.isEmpty()) {
                     List<AlarmMailInfo> tempList = new ArrayList<>(tempMailInfo.values());
-                    List<String> filePaths = new ArrayList<>();
+                    List<String> fileAttachments = new ArrayList<>();
+                    List<MailAttachment> streamAttachments = new ArrayList<>();
                     String warnChannel = new String();
                     for (AlarmMailInfo alarmInfo : tempList) {
                         if (StringUtils.hasText(warnChannel)) {
                             warnChannel = warnChannel + "-";
                         }
                         warnChannel = warnChannel + alarmInfo.getChannel().getName() + "(" + alarmInfo.getChannel().getNumber() + ")";
-                        filePaths.addAll(alarmInfo.getImages());
+                        fileAttachments.addAll(alarmInfo.getFileImages());
+                        streamAttachments.addAll(alarmInfo.getStreamImages());
                     }
-                    if (!CollectionUtils.isEmpty(filePaths)) {
+                    if (!CollectionUtils.isEmpty(fileAttachments)) {
 
                         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
                         //3、发送邮件
@@ -95,18 +98,16 @@ public class MailService {
                         mailRequest.setSubject(SDKConstant.NvrName + "预警-" + warnChannel);
                         mailRequest.setSendTo(NvrConfigConstant.mailTo);
                         mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
-                        mailRequest.setFilePath(filePaths);
-                        try {
-                            multipleMailService.sendMail(mailRequest);
-                            for (String filePath : filePaths) {
+                        mailRequest.setFileAttachments(fileAttachments);
+                        mailRequest.setStreamAttachments(streamAttachments);
+                        multipleMailService.sendMail(mailRequest);
+                        if (!CollectionUtils.isEmpty(fileAttachments)) {
+                            for (String filePath : fileAttachments) {
                                 File file = new File(filePath);
                                 if (file.exists()) {
                                     file.delete();
                                 }
                             }
-                        } catch (Exception e) {
-                            //                  AlarmService.ALARM_QUEUE.add(mailInfo);
-                            log.error("发送邮件失败," + e.getMessage());
                         }
                     }
                 }

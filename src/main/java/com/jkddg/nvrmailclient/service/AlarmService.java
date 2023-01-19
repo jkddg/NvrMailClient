@@ -7,6 +7,7 @@ import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.hkHelper.LoginHelper;
 import com.jkddg.nvrmailclient.model.AlarmMailInfo;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
+import com.jkddg.nvrmailclient.model.MailAttachment;
 import com.jkddg.nvrmailclient.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -74,13 +75,25 @@ public class AlarmService {
 
                             //2、通道截图
                             List<String> imageAll = new ArrayList<>();
+                            List<MailAttachment> attachments = new ArrayList<>();
                             String picPrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss-"));
                             for (int i = 0; i < NvrConfigConstant.captureCount; i++) {
-                                String imagePath = capturePictureHelper.getNVRPicByConfigPath(picPrefix + (i + 1), channelInfo);
-                                if (StringUtils.isEmpty(imagePath)) {
-                                    log.warn("第" + (i + 1) + "次抓图失败");
+                                if (NvrConfigConstant.captureInMemory) {
+                                    //内存抓图
+                                    MailAttachment mailAttachment = capturePictureHelper.getMemoryImage(picPrefix + (i + 1), channelInfo);
+                                    if (mailAttachment != null) {
+                                        attachments.add(mailAttachment);
+                                    } else {
+                                        log.warn(channelInfo.getName() + "第" + (i + 1) + "次内存抓图失败");
+                                    }
                                 } else {
-                                    imageAll.add(imagePath);
+                                    //文件抓图
+                                    String imagePath = capturePictureHelper.getFileImage(picPrefix + (i + 1), channelInfo);
+                                    if (StringUtils.isEmpty(imagePath)) {
+                                        log.warn(channelInfo.getName() + "第" + (i + 1) + "次文件抓图失败");
+                                    } else {
+                                        imageAll.add(imagePath);
+                                    }
                                 }
                                 try {
                                     Thread.sleep(NvrConfigConstant.captureIntervalSecond * 1000);
@@ -91,7 +104,12 @@ public class AlarmService {
                             alarmTimeMap.put(channel, LocalDateTime.now());
                             AlarmMailInfo alarmMailInfo = new AlarmMailInfo();
                             alarmMailInfo.setChannel(channelInfo);
-                            alarmMailInfo.setImages(imageAll);
+                            if (!CollectionUtils.isEmpty(imageAll)) {
+                                alarmMailInfo.setFileImages(imageAll);
+                            }
+                            if (!CollectionUtils.isEmpty(attachments)) {
+                                alarmMailInfo.setStreamImages(attachments);
+                            }
                             if (!CollectionUtils.isEmpty(imageAll)) {
                                 ALARM_QUEUE.add(alarmMailInfo);
                                 MailService mailService = SpringUtil.getBean(MailService.class);
