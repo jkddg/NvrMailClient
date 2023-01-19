@@ -32,11 +32,13 @@ public class NvrMailClientApplication {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
             public void run() {
-                log.info("退出程序,资源回收");
+                log.info("开始退出程序,资源回收");
                 AlarmHelper.EndAlarm();
                 SDKConstant.hCNetSDK.NET_DVR_Logout(SDKConstant.lUserID);
+                log.info("用户退出成功");
                 //释放SDK资源
                 SDKConstant.hCNetSDK.NET_DVR_Cleanup();
+                log.info("SDK资源回收成功");
             }
         }));
     }
