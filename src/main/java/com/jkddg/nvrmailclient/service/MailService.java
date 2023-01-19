@@ -24,9 +24,6 @@ import java.util.*;
 @Component
 public class MailService {
 
-    //    @Autowired
-//    private SimpleMailService mailService;
-//    private static Object lockObj = new Object();
     private static LocalDateTime lastMailTime = null;
     private static TimerTask timerTask = new TimerTask() {
         @Override
