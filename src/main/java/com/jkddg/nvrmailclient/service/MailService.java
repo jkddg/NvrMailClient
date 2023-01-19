@@ -72,6 +72,7 @@ public class MailService {
                         tempMailInfo.put(mailInfo.getChannel().getNumber(), mailInfo);
                     } else {
                         tempMailInfo.get(mailInfo.getChannel().getNumber()).getFileImages().addAll(mailInfo.getFileImages());
+                        tempMailInfo.get(mailInfo.getChannel().getNumber()).getStreamImages().addAll(mailInfo.getStreamImages());
                     }
                 }
                 if (!tempMailInfo.isEmpty()) {
@@ -84,10 +85,14 @@ public class MailService {
                             warnChannel = warnChannel + "-";
                         }
                         warnChannel = warnChannel + alarmInfo.getChannel().getName() + "(" + alarmInfo.getChannel().getNumber() + ")";
-                        fileAttachments.addAll(alarmInfo.getFileImages());
-                        streamAttachments.addAll(alarmInfo.getStreamImages());
+                        if (!CollectionUtils.isEmpty(alarmInfo.getFileImages())) {
+                            fileAttachments.addAll(alarmInfo.getFileImages());
+                        }
+                        if (!CollectionUtils.isEmpty(alarmInfo.getStreamImages())) {
+                            streamAttachments.addAll(alarmInfo.getStreamImages());
+                        }
                     }
-                    if (!CollectionUtils.isEmpty(fileAttachments)) {
+                    if (!CollectionUtils.isEmpty(streamAttachments) || !CollectionUtils.isEmpty(fileAttachments)) {
 
                         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
                         //3、发送邮件

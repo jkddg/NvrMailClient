@@ -6,6 +6,7 @@ import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
@@ -27,6 +28,7 @@ public class ChannelHelper {
 
     public static List<ChannelInfo> channelInfos = null;
     private static LocalDateTime initChannelTime = null;
+    private static Object flashLockObj = new Object();
 
     /**
      * 获取IP通道及状态
@@ -125,13 +127,17 @@ public class ChannelHelper {
      */
     public static void flashChannel() {
 //        log.info("刷新通道-UserId=" + lUserID + ",time=" + LocalDateTime.now());
-        if (lUserID == -1) {
-            return;
-        }
         if (initChannelTime == null || initChannelTime.isBefore(LocalDateTime.now().minusMinutes(NvrConfigConstant.channelFlashMinute))) {
-            initChannel(lUserID);
-            initChannelTime = LocalDateTime.now();
-            log.info("刷新通道完成-UserId=" + lUserID + ",time=" + LocalDateTime.now());
+            synchronized (flashLockObj) {
+                if (lUserID == -1) {
+                    return;
+                }
+                if (initChannelTime == null || initChannelTime.isBefore(LocalDateTime.now().minusMinutes(NvrConfigConstant.channelFlashMinute))) {
+                    initChannel(lUserID);
+                    initChannelTime = LocalDateTime.now();
+                    log.info("刷新通道完成-UserId=" + lUserID + ",time=" + LocalDateTime.now());
+                }
+            }
         }
     }
 
