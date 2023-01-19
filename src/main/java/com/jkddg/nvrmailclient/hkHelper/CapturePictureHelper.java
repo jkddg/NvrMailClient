@@ -123,7 +123,7 @@ public class CapturePictureHelper {
             return null;
         }
         byte_array.read();
-        System.out.println("抓图成功");
+//        System.out.println("抓图成功");
         byte[] resBytes = byte_array.getPointer().getByteArray(0, ret.getValue());
         return new ByteArrayDataSource(resBytes, "image/jpeg");
     }
