@@ -47,9 +47,6 @@ public class AlarmHelper {
         struNET_DVR_LOCAL_GENERAL_CFG.write();
         Pointer pStrNET_DVR_LOCAL_GENERAL_CFG = struNET_DVR_LOCAL_GENERAL_CFG.getPointer();
         hCNetSDK.NET_DVR_SetSDKLocalCfg(17, pStrNET_DVR_LOCAL_GENERAL_CFG);
-
-//     Alarm.login_V40( "10.16.36.103", (short) 8000, "admin", "hik12345");  //登录设备
-
         setAlarm(lUserID);//报警布防，和报警监听二选一即可
     }
 
