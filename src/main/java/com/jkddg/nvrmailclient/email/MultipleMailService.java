@@ -92,7 +92,7 @@ public class MultipleMailService {
     }
 
     //声明一个Message对象(代表一封邮件),从session中创建
-    private MimeMessage getMimeMessage(String username, String toEmail, String subject, String text, List<MailAttachment> attachments, List<String> filePaths, JavaMailSenderImpl javaMailSender) throws MessagingException {
+    private MimeMessage getMimeMessage(String username, String toEmail, String subject, String text, List<MailAttachment> streamAttachments, List<String> fileAttachments, JavaMailSenderImpl javaMailSender) throws MessagingException {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -105,16 +105,15 @@ public class MultipleMailService {
         mimeMessageHelper.setSubject(subject);
         //邮件内容
         mimeMessageHelper.setText(text, true);
-        mimeMessageHelper.getFileTypeMap().getContentType(".jpg");
-        if (!CollectionUtils.isEmpty(attachments)) {
-            for (MailAttachment attachment : attachments) {
+        if (!CollectionUtils.isEmpty(streamAttachments)) {
+            for (MailAttachment attachment : streamAttachments) {
                 if (attachment != null && attachment.getDataSource() != null) {
                     mimeMessageHelper.addAttachment(attachment.getName(), attachment.getDataSource());
                 }
             }
         }
-        if (!CollectionUtils.isEmpty(filePaths)) {
-            for (String filePath : filePaths) {
+        if (!CollectionUtils.isEmpty(fileAttachments)) {
+            for (String filePath : fileAttachments) {
                 if (StringUtils.hasText(filePath)) {
                     File attachFile = new File(filePath);
                     if (attachFile.exists()) {
