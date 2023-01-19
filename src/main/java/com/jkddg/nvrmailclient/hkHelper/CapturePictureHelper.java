@@ -89,7 +89,7 @@ public class CapturePictureHelper {
             }
             return path;
         } else {
-            log.info("hkSdk(抓图)-抓取失败,错误码:" + hCNetSDK.NET_DVR_GetLastError() + ",图片路径" + path);
+            log.warn("文件抓图失败,错误码:" + hCNetSDK.NET_DVR_GetLastError() + ",图片路径" + path);
             return null;
         }
 
@@ -117,11 +117,10 @@ public class CapturePictureHelper {
         IntByReference ret = new IntByReference(0);
         boolean b = hCNetSDK.NET_DVR_CaptureJPEGPicture_NEW(lUserID, channel.getNumber(), jpegpara, byte_array.getPointer(), byte_array.size(), ret);
         if (b == false) {
-            System.out.println("抓图失败：" + hCNetSDK.NET_DVR_GetLastError());
+            log.warn("内存抓图失败,错误码:" + hCNetSDK.NET_DVR_GetLastError() + ",通道:" + channel.getName());
             return null;
         }
         byte_array.read();
-//        System.out.println("抓图成功");
         byte[] resBytes = byte_array.getPointer().getByteArray(0, ret.getValue());
         return new ByteArrayDataSource(resBytes, "image/jpeg");
     }
