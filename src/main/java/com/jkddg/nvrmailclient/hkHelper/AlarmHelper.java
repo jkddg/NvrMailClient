@@ -42,7 +42,8 @@ public class AlarmHelper {
          报警信息结构体为NET_DVR_ALARM_ISAPI_INFO（与设备无关，SDK封装的数据结构），更便于解析。*/
 
         HCNetSDK.NET_DVR_LOCAL_GENERAL_CFG struNET_DVR_LOCAL_GENERAL_CFG = new HCNetSDK.NET_DVR_LOCAL_GENERAL_CFG();
-        struNET_DVR_LOCAL_GENERAL_CFG.byAlarmJsonPictureSeparate = 1;   //设置JSON透传报警数据和图片分离
+        struNET_DVR_LOCAL_GENERAL_CFG.byExceptionCbDirectly = 0;  //0-通过线程池异常回调，1-直接异常回调给上层
+        struNET_DVR_LOCAL_GENERAL_CFG.byAlarmJsonPictureSeparate = 1;   //设置JSON透传报警数据和图片分离，0-不分离，1-分离（分离后走COMM_ISAPI_ALARM回调返回）
         struNET_DVR_LOCAL_GENERAL_CFG.write();
         Pointer pStrNET_DVR_LOCAL_GENERAL_CFG = struNET_DVR_LOCAL_GENERAL_CFG.getPointer();
         hCNetSDK.NET_DVR_SetSDKLocalCfg(17, pStrNET_DVR_LOCAL_GENERAL_CFG);
