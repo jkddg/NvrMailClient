@@ -68,7 +68,7 @@ nvr:
     sleep-second: 3
     pic-quality: 1
   channel:
-    flash-minute: 5
+    flash-minute: 2
 
   alarm:
     interval-second: 30

@@ -36,6 +36,7 @@ public class ChannelHelper {
      * @param iUserID
      */
     public static List<ChannelInfo> getIPChannelInfo(int iUserID) {
+        log.info("开始从录像机加载通道信息");
         List<ChannelInfo> channelInfos = new ArrayList<>();
         IntByReference ibrBytesReturned = new IntByReference(0);//获取IP接入配置参数
         HCNetSDK.NET_DVR_IPPARACFG_V40 m_strIpparaCfg = new HCNetSDK.NET_DVR_IPPARACFG_V40();
@@ -44,7 +45,7 @@ public class ChannelHelper {
         Pointer lpIpParaConfig = m_strIpparaCfg.getPointer();
         boolean bRet = hCNetSDK.NET_DVR_GetDVRConfig(iUserID, HCNetSDK.NET_DVR_GET_IPPARACFG_V40, 0, lpIpParaConfig, m_strIpparaCfg.size(), ibrBytesReturned);
         m_strIpparaCfg.read();
-        log.info("起始数字通道号：" + m_strIpparaCfg.dwStartDChan);
+//        log.info("起始数字通道号：" + m_strIpparaCfg.dwStartDChan);
 
         for (int iChannum = 0; iChannum < m_strIpparaCfg.dwDChanNum; iChannum++) {
             ChannelInfo channelInfo = new ChannelInfo();
@@ -68,28 +69,29 @@ public class ChannelHelper {
 
                 log.info("--------------第" + (iChannum + 1) + "个通道------------------");
                 int channel = m_strIpparaCfg.struStreamMode[iChannum].uGetStream.struChanInfo.byIPID + m_strIpparaCfg.struStreamMode[iChannum].uGetStream.struChanInfo.byIPIDHigh * 256;
-                log.info("channel:" + channel);
+//                log.info("channel:" + channel);
                 if (channel > 0) {
                     channelInfo.setIp(new String(m_strIpparaCfg.struIPDevInfo[channel - 1].struIP.sIpV4).trim());
-                    log.info("ip： " + new String(m_strIpparaCfg.struIPDevInfo[channel - 1].struIP.sIpV4).trim());
+//                    log.info("ip： " + new String(m_strIpparaCfg.struIPDevInfo[channel - 1].struIP.sIpV4).trim());
                 }
                 try {
                     channelInfo.setName(new String(strPicCfg.sChanName, "GBK").trim());
-                    log.info("name： " + new String(strPicCfg.sChanName, "GBK").trim());
+//                    log.info("name： " + new String(strPicCfg.sChanName, "GBK").trim());
                 } catch (UnsupportedEncodingException e) {
                     throw new RuntimeException(e);
                 }
                 if (m_strIpparaCfg.struStreamMode[iChannum].uGetStream.struChanInfo.byEnable == 1) {
-                    log.info("IP通道" + channum + "在线");
+//                    log.info("IP通道" + channum + "在线");
                     channelInfo.setOnLine(true);
                 } else {
                     channelInfo.setOnLine(false);
-                    log.info("IP通道" + channum + "不在线");
-
+//                    log.info("IP通道" + channum + "不在线");
                 }
+                log.info("通道信息:"+channelInfo.toString());
             }
             channelInfos.add(channelInfo);
         }
+        log.info("结束从录像机加载通道信息");
         return channelInfos;
     }
 
