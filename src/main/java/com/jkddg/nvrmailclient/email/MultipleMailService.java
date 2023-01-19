@@ -1,6 +1,6 @@
 package com.jkddg.nvrmailclient.email;
 
-import com.jkddg.nvrmailclient.model.MailAttachment;
+import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import com.jkddg.nvrmailclient.model.MailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +92,7 @@ public class MultipleMailService {
     }
 
     //声明一个Message对象(代表一封邮件),从session中创建
-    private MimeMessage getMimeMessage(String username, String toEmail, String subject, String text, List<MailAttachment> streamAttachments, List<String> fileAttachments, JavaMailSenderImpl javaMailSender) throws MessagingException {
+    private MimeMessage getMimeMessage(String username, String toEmail, String subject, String text, List<MailStreamAttachment> streamAttachments, List<String> fileAttachments, JavaMailSenderImpl javaMailSender) throws MessagingException {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -106,7 +106,7 @@ public class MultipleMailService {
         //邮件内容
         mimeMessageHelper.setText(text, true);
         if (!CollectionUtils.isEmpty(streamAttachments)) {
-            for (MailAttachment attachment : streamAttachments) {
+            for (MailStreamAttachment attachment : streamAttachments) {
                 if (attachment != null && attachment.getDataSource() != null) {
                     mimeMessageHelper.addAttachment(attachment.getName(), attachment.getDataSource());
                 }

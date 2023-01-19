@@ -4,7 +4,7 @@ import com.jkddg.nvrmailclient.HCNetSDK;
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
-import com.jkddg.nvrmailclient.model.MailAttachment;
+import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import com.sun.jna.ptr.IntByReference;
 import lombok.extern.slf4j.Slf4j;
 
@@ -97,15 +97,15 @@ public class CapturePictureHelper {
 
     }
 
-    public MailAttachment getMemoryImage(String indexNo, ChannelInfo channel) {
+    public MailStreamAttachment getMemoryImage(String indexNo, ChannelInfo channel) {
         ByteArrayDataSource dataSource = getMemoryImage(channel);
         if (dataSource == null) {
             return null;
         }
-        MailAttachment mailAttachment = new MailAttachment();
-        mailAttachment.setDataSource(dataSource);
-        mailAttachment.setName(channel.getName() + "-" + indexNo + ".jpg".trim());
-        return mailAttachment;
+        MailStreamAttachment streamAttachment = new MailStreamAttachment();
+        streamAttachment.setDataSource(dataSource);
+        streamAttachment.setName(channel.getName() + "-" + indexNo + ".jpg".trim());
+        return streamAttachment;
     }
 
     //抓图保存到缓冲区(linux)

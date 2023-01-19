@@ -14,7 +14,7 @@ import java.util.List;
 public class AlarmMailInfo {
     ChannelInfo channel;
     List<String> fileImages;
-    List<MailAttachment> streamImages;
+    List<MailStreamAttachment> streamImages;
 
 
 }

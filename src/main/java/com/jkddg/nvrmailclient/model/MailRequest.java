@@ -37,6 +37,6 @@ public class MailRequest {
     /**
      * 附件
      */
-    private List<MailAttachment> streamAttachments;
+    private List<MailStreamAttachment> streamAttachments;
 
 }

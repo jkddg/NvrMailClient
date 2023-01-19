@@ -4,7 +4,7 @@ import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.email.MultipleMailService;
 import com.jkddg.nvrmailclient.model.AlarmMailInfo;
-import com.jkddg.nvrmailclient.model.MailAttachment;
+import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import com.jkddg.nvrmailclient.model.MailRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +80,7 @@ public class MailService {
                 if (!tempMailInfo.isEmpty()) {
                     List<AlarmMailInfo> tempList = new ArrayList<>(tempMailInfo.values());
                     List<String> fileAttachments = new ArrayList<>();
-                    List<MailAttachment> streamAttachments = new ArrayList<>();
+                    List<MailStreamAttachment> streamAttachments = new ArrayList<>();
                     String warnChannel = new String();
                     for (AlarmMailInfo alarmInfo : tempList) {
                         if (StringUtils.hasText(warnChannel)) {

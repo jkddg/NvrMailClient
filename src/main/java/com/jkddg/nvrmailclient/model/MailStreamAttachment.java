@@ -9,7 +9,7 @@ import javax.mail.util.ByteArrayDataSource;
  * @create 2023/1/12 12:14
  */
 @Data
-public class MailAttachment {
+public class MailStreamAttachment {
 
     private String name;
     private ByteArrayDataSource dataSource;

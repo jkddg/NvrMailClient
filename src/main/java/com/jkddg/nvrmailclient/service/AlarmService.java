@@ -7,7 +7,7 @@ import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.hkHelper.LoginHelper;
 import com.jkddg.nvrmailclient.model.AlarmMailInfo;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
-import com.jkddg.nvrmailclient.model.MailAttachment;
+import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import com.jkddg.nvrmailclient.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -74,15 +74,15 @@ public class AlarmService {
                             }
 
                             //2、通道截图
-                            List<String> imageAll = new ArrayList<>();
-                            List<MailAttachment> attachments = new ArrayList<>();
+                            List<String> fileAttachments = new ArrayList<>();
+                            List<MailStreamAttachment> streamAttachments = new ArrayList<>();
                             String picPrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss-"));
                             for (int i = 0; i < NvrConfigConstant.captureCount; i++) {
                                 if (NvrConfigConstant.captureInMemory) {
                                     //内存抓图
-                                    MailAttachment mailAttachment = capturePictureHelper.getMemoryImage(picPrefix + (i + 1), channelInfo);
-                                    if (mailAttachment != null) {
-                                        attachments.add(mailAttachment);
+                                    MailStreamAttachment streamAttachment = capturePictureHelper.getMemoryImage(picPrefix + (i + 1), channelInfo);
+                                    if (streamAttachment != null) {
+                                        streamAttachments.add(streamAttachment);
                                     } else {
                                         log.warn(channelInfo.getName() + "第" + (i + 1) + "次内存抓图失败");
                                     }
@@ -92,7 +92,7 @@ public class AlarmService {
                                     if (StringUtils.isEmpty(imagePath)) {
                                         log.warn(channelInfo.getName() + "第" + (i + 1) + "次文件抓图失败");
                                     } else {
-                                        imageAll.add(imagePath);
+                                        fileAttachments.add(imagePath);
                                     }
                                 }
                                 try {
@@ -104,13 +104,13 @@ public class AlarmService {
                             alarmTimeMap.put(channel, LocalDateTime.now());
                             AlarmMailInfo alarmMailInfo = new AlarmMailInfo();
                             alarmMailInfo.setChannel(channelInfo);
-                            if (!CollectionUtils.isEmpty(imageAll)) {
-                                alarmMailInfo.setFileImages(imageAll);
+                            if (!CollectionUtils.isEmpty(fileAttachments)) {
+                                alarmMailInfo.setFileImages(fileAttachments);
                             }
-                            if (!CollectionUtils.isEmpty(attachments)) {
-                                alarmMailInfo.setStreamImages(attachments);
+                            if (!CollectionUtils.isEmpty(streamAttachments)) {
+                                alarmMailInfo.setStreamImages(streamAttachments);
                             }
-                            if (!CollectionUtils.isEmpty(imageAll)) {
+                            if (!CollectionUtils.isEmpty(fileAttachments)) {
                                 ALARM_QUEUE.add(alarmMailInfo);
                                 MailService mailService = SpringUtil.getBean(MailService.class);
                                 mailService.checkAndSendMail();
