@@ -80,8 +80,6 @@ public class CapturePictureHelper {
                         String filename = dir.getPath() + File.separator + name;
                         return filename.contains(path);
                     }
-
-                    ;
                 });
 
                 for (File file1 : files) {
