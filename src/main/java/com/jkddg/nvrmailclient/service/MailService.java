@@ -84,7 +84,7 @@ public class MailService {
                         if (StringUtils.hasText(warnChannel)) {
                             warnChannel = warnChannel + "-";
                         }
-                        warnChannel = warnChannel + alarmInfo.getChannel().getName() + "(" + alarmInfo.getChannel().getNumber() + ")";
+                        warnChannel = warnChannel + alarmInfo.getChannel().getName();
                         if (!CollectionUtils.isEmpty(alarmInfo.getFileImages())) {
                             fileAttachments.addAll(alarmInfo.getFileImages());
                         }
