@@ -57,7 +57,7 @@ public class AlarmService {
                                 alarmTimeMap.put(channel, LocalDateTime.now());
                             } else {
                                 LocalDateTime lastTime = alarmTimeMap.get(channel);
-                                LocalDateTime compareTime=LocalDateTime.now().minusSeconds(NvrConfigConstant.alarmIntervalSecond);
+                                LocalDateTime compareTime = LocalDateTime.now().minusSeconds(NvrConfigConstant.alarmIntervalSecond);
                                 if (lastTime.isAfter(compareTime)) {
 //                            log.info("通道名：" + channelInfo.getName() + "，通道号：" + channel + "预警间隔不够" + NvrConfigConstant.alarmIntervalSecond + "秒，丢弃");
                                     return;
@@ -66,12 +66,9 @@ public class AlarmService {
                             //1、判断通道是否在线
                             ChannelInfo channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
                             if (channelInfo == null) {
+                                log.warn("预警通道不在线，通道号：" + channel);
                                 ChannelHelper.flashChannel();
-                                channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
-                                if (channelInfo == null) {
-                                    log.warn("预警通道不在线，通道号：" + channel);
-                                    return;
-                                }
+                                return;
                             }
 
                             //2、通道截图

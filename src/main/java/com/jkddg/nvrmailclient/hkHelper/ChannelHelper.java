@@ -112,7 +112,6 @@ public class ChannelHelper {
         if (CollectionUtils.isEmpty(channelInfos)) {
             initChannel(iUserID);
         }
-        flashChannel();
         return channelInfos.stream().filter(p -> p.isOnLine()).collect(Collectors.toList());
     }
 
