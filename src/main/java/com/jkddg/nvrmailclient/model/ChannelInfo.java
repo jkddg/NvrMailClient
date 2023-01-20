@@ -1,8 +1,6 @@
 package com.jkddg.nvrmailclient.model;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @Author 黄永好

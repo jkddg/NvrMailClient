@@ -5,10 +5,10 @@ import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.hkHelper.CapturePictureHelper;
 import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.hkHelper.LoginHelper;
+import com.jkddg.nvrmailclient.model.AlarmLockObject;
 import com.jkddg.nvrmailclient.model.AlarmMailInfo;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.jkddg.nvrmailclient.model.MailStreamAttachment;
-import com.jkddg.nvrmailclient.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Component
 public class AlarmService {
 
-    static Map<Integer, String> lockMap = new ConcurrentHashMap<>();
+    static Map<Integer, AlarmLockObject> lockMap = new ConcurrentHashMap<>();
     public static Queue<AlarmMailInfo> ALARM_QUEUE = new LinkedBlockingQueue<>();
 
     static Map<Integer, LocalDateTime> alarmTimeMap = new HashMap<>();//key=通道号，value=上次预警时间
@@ -54,9 +54,9 @@ public class AlarmService {
                     @Override
                     public void run() {
                         if (!lockMap.containsKey(channel)) {
-                            lockMap.put(channel, new String("nvr-lock-" + channel));
+                            lockMap.put(channel, new AlarmLockObject(channel));
                         }
-                        String lockObject = lockMap.get(channel);
+                        AlarmLockObject lockObject = lockMap.get(channel);
                         synchronized (lockObject) {
                             //判断预警间隔，太短的丢弃
                             if (!alarmTimeMap.containsKey(channel)) {

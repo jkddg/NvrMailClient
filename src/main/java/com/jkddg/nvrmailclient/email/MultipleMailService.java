@@ -1,7 +1,7 @@
 package com.jkddg.nvrmailclient.email;
 
-import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import com.jkddg.nvrmailclient.model.MailRequest;
+import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
