@@ -7,6 +7,7 @@ import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import com.sun.jna.ptr.IntByReference;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import javax.mail.util.ByteArrayDataSource;
 import java.io.File;
@@ -21,6 +22,7 @@ import static com.jkddg.nvrmailclient.constant.SDKConstant.lUserID;
  * @create 2023/1/10 14:21
  */
 @Slf4j
+@Component
 public class CapturePictureHelper {
 
 

@@ -5,6 +5,7 @@ import com.jkddg.nvrmailclient.service.AlarmService;
 import com.jkddg.nvrmailclient.util.ByteUtil;
 import com.sun.jna.Pointer;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ import java.util.List;
 @Component
 public class AlarmProcess {
 
-    AlarmService alarmService = new AlarmService();
+    @Autowired
+    AlarmService alarmService;
 
     public List<Integer> getAlarmChannel(HCNetSDK.NET_DVR_ALARMINFO_V30 struAlarmInfo) {
         List<Integer> alarmChannels = new ArrayList<>();

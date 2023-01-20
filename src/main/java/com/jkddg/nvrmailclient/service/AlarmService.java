@@ -10,6 +10,8 @@ import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import com.jkddg.nvrmailclient.util.SpringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @create 2023/1/12 9:38
  */
 @Slf4j
+@Component
 public class AlarmService {
 
     static Map<Integer, String> lockMap = new ConcurrentHashMap<>();
@@ -31,7 +34,10 @@ public class AlarmService {
 
     static Map<Integer, LocalDateTime> alarmTimeMap = new HashMap<>();//key=通道号，value=上次预警时间
 
-    CapturePictureHelper capturePictureHelper = new CapturePictureHelper();
+    @Autowired
+    private CapturePictureHelper capturePictureHelper;
+    @Autowired
+    MailService mailService;
 
 
     public void alarmAppendQueue(List<Integer> channels) {
@@ -110,7 +116,7 @@ public class AlarmService {
                             }
                             if (!CollectionUtils.isEmpty(streamAttachments) || !CollectionUtils.isEmpty(fileAttachments)) {
                                 ALARM_QUEUE.add(alarmMailInfo);
-                                MailService mailService = SpringUtil.getBean(MailService.class);
+//                                MailService mailService = SpringUtil.getBean(MailService.class);
                                 mailService.checkAndSendMail();
                             }
                         }
