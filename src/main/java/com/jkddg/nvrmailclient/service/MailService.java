@@ -40,7 +40,7 @@ public class MailService {
         }
         if (lastMailTime.isBefore(LocalDateTime.now().minusSeconds(NvrConfigConstant.mailIntervalSecond))) {
             //立即执行
-            log.info("邮件立即发送");
+//            log.info("邮件立即发送");
             lastMailTime = LocalDateTime.now();
             sendMail();
         } else {
@@ -49,7 +49,7 @@ public class MailService {
             // 然后创建一个新的任务
             timerTask = new TimerTask() {
                 public void run() {
-                    log.info("邮件延时发送");
+//                    log.info("邮件延时发送");
                     sendMail();
                 }
             };
@@ -60,7 +60,7 @@ public class MailService {
 
     private void sendMail() {
         if (SDKConstant.lUserID > -1) {
-            log.info("检查发送邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
+//            log.info("检查发送邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
             if (!AlarmService.ALARM_QUEUE.isEmpty()) {
                 Map<Integer, AlarmMailInfo> tempMailInfo = new HashMap<>();
                 while (!AlarmService.ALARM_QUEUE.isEmpty()) {
