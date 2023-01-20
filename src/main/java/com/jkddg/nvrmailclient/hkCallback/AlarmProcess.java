@@ -23,7 +23,7 @@ public class AlarmProcess {
     @Autowired
     AlarmService alarmService;
 
-    public List<Integer> getAlarmChannel(HCNetSDK.NET_DVR_ALARMINFO_V30 struAlarmInfo) {
+    public List<Integer> filterAlarmChannel(HCNetSDK.NET_DVR_ALARMINFO_V30 struAlarmInfo) {
         List<Integer> alarmChannels = new ArrayList<>();
         int[] channels = ByteUtil.byteArrayToIntArray(struAlarmInfo.byChannel);
         for (int i = 0; i < channels.length; i++) {
@@ -45,7 +45,7 @@ public class AlarmProcess {
                 pAlarmInfo_V30.write(0, pAlarmInfo.getByteArray(0, struAlarmInfo.size()), 0, struAlarmInfo.size());
                 struAlarmInfo.read();
 //                log.info("报警类型：" + struAlarmInfo.dwAlarmType);  // 3-移动侦测
-                List<Integer> channel = getAlarmChannel(struAlarmInfo);
+                List<Integer> channel = filterAlarmChannel(struAlarmInfo);
                 alarmService.alarmAppendQueue(channel);
                 break;
             case HCNetSDK.COMM_ALARM_V40: //移动侦测、视频丢失、遮挡、IO信号量等报警信息，报警数据为可变长
