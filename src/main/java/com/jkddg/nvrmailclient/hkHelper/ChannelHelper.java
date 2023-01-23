@@ -58,7 +58,7 @@ public class ChannelHelper {
             IntByReference pInt = new IntByReference(0);
             boolean b_GetPicCfg = hCNetSDK.NET_DVR_GetDVRConfig(iUserID, HCNetSDK.NET_DVR_GET_PICCFG_V40, lChannel.intValue(), pStrPicCfg, strPicCfg.size(), pInt);
             if (b_GetPicCfg == false) {
-                log.info("获取图像参数失败，错误码：" + hCNetSDK.NET_DVR_GetLastError());
+                log.info("获取通道图像参数失败，错误码：" + hCNetSDK.NET_DVR_GetLastError());
             }
             strPicCfg.read();
             m_strIpparaCfg.struStreamMode[iChannum].read();
@@ -86,7 +86,7 @@ public class ChannelHelper {
                     channelInfo.setOnLine(false);
 //                    log.info("IP通道" + channum + "不在线");
                 }
-                log.info("通道信息:"+channelInfo.toString());
+                log.info("通道信息:" + channelInfo.toString());
             }
             channelInfos.add(channelInfo);
         }
