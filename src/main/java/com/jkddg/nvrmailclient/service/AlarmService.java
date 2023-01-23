@@ -116,7 +116,6 @@ public class AlarmService {
                             }
                             if (!CollectionUtils.isEmpty(streamAttachments) || !CollectionUtils.isEmpty(fileAttachments)) {
                                 ALARM_QUEUE.add(alarmMailInfo);
-//                                MailService mailService = SpringUtil.getBean(MailService.class);
                                 mailService.checkAndSendMail();
                             }
                         }
