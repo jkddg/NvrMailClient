@@ -44,6 +44,24 @@ sender-email:
       username: jkddg2025@163.com
       password: KGDJGNDISLTUMVSW
       senderName: jkddg2025@163.com
+    mail-3:
+      host: smtp.163.com
+      port: 25
+      username: jkddg2026@163.com
+      password: EWDYPFNBDZBEITWV
+      senderName: jkddg2026@163.com
+    mail-4:
+      host: smtp.163.com
+      port: 25
+      username: jkddg2027@163.com
+      password: PKXARZXXFKUPEGAY
+      senderName: jkddg2027@163.com
+    mail-5:
+      host: smtp.163.com
+      port: 25
+      username: jkddg2028@163.com
+      password: CNVKJSFRLAZEIDFU
+      senderName: jkddg2028@163.com
 
 nvr:
   linux-lib-path: /home/javaApps/hklib/
@@ -51,7 +69,7 @@ nvr:
   win-lib-path: D:\hklib\
   win-sdk-log: D:\sdkLog
   server:
-    ip: 192.168.50.51
+    ip: 192.168.8.114
     port: 8000
     user: admin
     pwd: abcd123456
