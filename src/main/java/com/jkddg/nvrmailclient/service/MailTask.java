@@ -32,7 +32,7 @@ public class MailTask {
     AlarmService alarmService;
 
 
-    @Scheduled(fixedRate = 1 * 60 * 1000)   //定时器定义，设置执行时间
+    @Scheduled(fixedRate = 2 * 60 * 1000)   //定时器定义，设置执行时间
     @Async("taskPoolExecutor")
     public void timerMailSend() {
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);

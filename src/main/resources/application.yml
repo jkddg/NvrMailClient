@@ -90,6 +90,6 @@ nvr:
 
   alarm:
     interval-second: 30
-    mail-interval-second: 20
+    mail-interval-second: 150
   mail-to: jkddg2022@163.com
 
