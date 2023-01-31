@@ -99,10 +99,12 @@ public class AlarmService {
                                         fileAttachments.add(imagePath);
                                     }
                                 }
-                                try {
-                                    Thread.sleep(NvrConfigConstant.captureIntervalSecond * 1000);
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
+                                if ((i + 1) < NvrConfigConstant.captureCount) {
+                                    try {
+                                        Thread.sleep(NvrConfigConstant.captureIntervalSecond * 1000);
+                                    } catch (InterruptedException e) {
+                                        throw new RuntimeException(e);
+                                    }
                                 }
                             }
                             alarmTimeMap.put(channel, LocalDateTime.now());

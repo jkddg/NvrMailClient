@@ -108,6 +108,9 @@ public class ChannelHelper {
     }
 
     public static List<ChannelInfo> getOnLineIPChannels(int iUserID) {
+        if (iUserID == -1) {
+            return new ArrayList<>();
+        }
         if (CollectionUtils.isEmpty(channelInfos)) {
             initChannel(iUserID);
         }

@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -31,12 +32,14 @@ public class MailTask {
     AlarmService alarmService;
 
 
-    @Scheduled(fixedRate = 5 * 60 * 1000)   //定时器定义，设置执行时间 5s
+    @Scheduled(fixedRate = 2 * 60 * 1000)   //定时器定义，设置执行时间 
     @Async("taskPoolExecutor")
     public void timerMailSend() {
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
-        List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
-        alarmService.alarmAppendQueue(channels);
+        if(!CollectionUtils.isEmpty(list)) {
+            List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
+            alarmService.alarmAppendQueue(channels);
+        }
 
     }
 
