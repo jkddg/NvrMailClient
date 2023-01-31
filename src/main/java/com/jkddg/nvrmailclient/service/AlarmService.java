@@ -76,7 +76,7 @@ public class AlarmService {
                                 ChannelHelper.flashChannel();
                                 return;
                             }
-                            log.info("通道[" + channelInfo.getName() + "]触发移动侦测报警");
+                            log.info("通道[" + channelInfo.getName() + "]触发抓图事件");
                             //2、通道截图
                             List<String> fileAttachments = new ArrayList<>();
                             List<MailStreamAttachment> streamAttachments = new ArrayList<>();
