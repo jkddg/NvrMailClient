@@ -41,7 +41,6 @@ public class MailService {
         if (lastMailTime.isBefore(LocalDateTime.now().minusSeconds(NvrConfigConstant.mailIntervalSecond))) {
             //立即执行
 //            log.info("邮件立即发送");
-            lastMailTime = LocalDateTime.now();
             sendMail();
         } else {
             // 每次进来都清零
@@ -59,6 +58,7 @@ public class MailService {
     }
 
     private void sendMail() {
+        lastMailTime = LocalDateTime.now();
         if (SDKConstant.lUserID > -1) {
 //            log.info("检查发送邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
             if (!AlarmService.ALARM_QUEUE.isEmpty()) {
