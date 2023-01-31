@@ -97,7 +97,7 @@ public class MailService {
                         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
                         //3、发送邮件
                         MailRequest mailRequest = new MailRequest();
-                        mailRequest.setSubject(SDKConstant.NvrName + "预警-" + warnChannel);
+                        mailRequest.setSubject(SDKConstant.NvrName + "抓图-" + warnChannel);
                         mailRequest.setSendTo(NvrConfigConstant.mailTo);
                         mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
                         mailRequest.setFileAttachments(fileAttachments);
