@@ -54,7 +54,7 @@ public class MailService {
                 }
             };
             // 执行任务
-            new Timer().schedule(timerTask, 2000);
+            new Timer().schedule(timerTask, 3000);
         }
     }
 
