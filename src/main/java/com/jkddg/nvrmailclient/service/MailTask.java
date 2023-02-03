@@ -87,12 +87,12 @@ public class MailTask {
     }
 
     private void doMailSend() {
-        log.info("MailSend");
-//        List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
-//        if (!CollectionUtils.isEmpty(list)) {
-//            List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
-//            captureService.appendCaptureQueue(channels);
-//        }
+//        log.info("MailSend");
+        List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
+            captureService.appendCaptureQueue(channels);
+        }
     }
 
     @Bean(name = "taskPoolExecutor")
