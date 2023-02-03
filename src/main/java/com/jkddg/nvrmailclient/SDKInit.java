@@ -2,6 +2,7 @@ package com.jkddg.nvrmailclient;
 
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
+import com.jkddg.nvrmailclient.util.DateUtil;
 import com.jkddg.nvrmailclient.util.osSelect;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
@@ -45,6 +46,11 @@ public class SDKInit {
         log.info("channelFlashMinute=" + NvrConfigConstant.channelFlashMinute);
         log.info("linuxLibPath=" + NvrConfigConstant.linuxLibPath);
         log.info("winLibPath=" + NvrConfigConstant.winLibPath);
+        log.info("captureInMemory=" + NvrConfigConstant.captureInMemory);
+        log.info("daytimeCaptureIntervalSecond=" + NvrConfigConstant.daytimeCaptureIntervalSecond);
+        log.info("nightCaptureIntervalSecond=" + NvrConfigConstant.nightCaptureIntervalSecond);
+        log.info("daytimeStart=" + NvrConfigConstant.daytimeStart);
+        log.info("daytimeEnd=" + NvrConfigConstant.daytimeEnd);
         if (hCNetSDK == null) {
             if (!createSDKInstance()) {
                 log.error("Load SDK fail");
