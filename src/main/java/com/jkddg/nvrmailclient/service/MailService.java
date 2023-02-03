@@ -3,7 +3,7 @@ package com.jkddg.nvrmailclient.service;
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.email.MultipleMailService;
-import com.jkddg.nvrmailclient.model.AlarmMailInfo;
+import com.jkddg.nvrmailclient.model.CaptureMailInfo;
 import com.jkddg.nvrmailclient.model.MailRequest;
 import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import lombok.extern.slf4j.Slf4j;
@@ -61,10 +61,10 @@ public class MailService {
         lastMailTime = LocalDateTime.now();
         if (SDKConstant.lUserID > -1) {
 //            log.info("检查发送邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
-            if (!AlarmService.ALARM_QUEUE.isEmpty()) {
-                Map<Integer, AlarmMailInfo> tempMailInfo = new HashMap<>();
-                while (!AlarmService.ALARM_QUEUE.isEmpty()) {
-                    AlarmMailInfo mailInfo = AlarmService.ALARM_QUEUE.poll();
+            if (!CaptureService.CAPTURE_QUEUE.isEmpty()) {
+                Map<Integer, CaptureMailInfo> tempMailInfo = new HashMap<>();
+                while (!CaptureService.CAPTURE_QUEUE.isEmpty()) {
+                    CaptureMailInfo mailInfo = CaptureService.CAPTURE_QUEUE.poll();
                     if (mailInfo == null) {
                         break;
                     }
@@ -76,11 +76,11 @@ public class MailService {
                     }
                 }
                 if (!tempMailInfo.isEmpty()) {
-                    List<AlarmMailInfo> tempList = new ArrayList<>(tempMailInfo.values());
+                    List<CaptureMailInfo> tempList = new ArrayList<>(tempMailInfo.values());
                     List<String> fileAttachments = new ArrayList<>();
                     List<MailStreamAttachment> streamAttachments = new ArrayList<>();
                     String warnChannel = new String();
-                    for (AlarmMailInfo alarmInfo : tempList) {
+                    for (CaptureMailInfo alarmInfo : tempList) {
                         if (StringUtils.hasText(warnChannel)) {
                             warnChannel = warnChannel + "-";
                         }

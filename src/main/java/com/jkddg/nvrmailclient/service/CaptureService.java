@@ -5,8 +5,7 @@ import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.hkHelper.CapturePictureHelper;
 import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.hkHelper.LoginHelper;
-import com.jkddg.nvrmailclient.model.AlarmLockObject;
-import com.jkddg.nvrmailclient.model.AlarmMailInfo;
+import com.jkddg.nvrmailclient.model.CaptureMailInfo;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.jkddg.nvrmailclient.model.MailStreamAttachment;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -27,10 +25,10 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 @Slf4j
 @Component
-public class AlarmService {
+public class CaptureService {
 
     //    static Map<Integer, AlarmLockObject> lockMap = new ConcurrentHashMap<>();
-    public static Queue<AlarmMailInfo> ALARM_QUEUE = new LinkedBlockingQueue<>();
+    public static Queue<CaptureMailInfo> CAPTURE_QUEUE = new LinkedBlockingQueue<>();
 
     static Map<Integer, LocalDateTime> alarmTimeMap = new HashMap<>();//key=通道号，value=上次预警时间
 
@@ -40,13 +38,13 @@ public class AlarmService {
     MailService mailService;
 
 
-    public void alarmAppendQueue(List<Integer> channels) {
+    public void appendCaptureQueue(List<Integer> channels) {
         if (!CollectionUtils.isEmpty(channels)) {
             if (SDKConstant.lUserID == -1) {
                 LoginHelper.loginByConfig();
             }
             if (SDKConstant.lUserID == -1) {
-                log.warn("用户未登录，结束接收预警信息");
+                log.warn("用户未登录，结束接收抓图信息");
                 return;
             }
             for (Integer channel : channels) {
@@ -67,7 +65,7 @@ public class AlarmService {
                         //1、判断通道是否在线
                         ChannelInfo channelInfo = ChannelHelper.getOnlineChannelInfoByNo(channel);
                         if (channelInfo == null) {
-                            log.warn("预警通道不在线，通道号：" + channel);
+                            log.warn("通道不在线，通道号：" + channel);
                             ChannelHelper.flashChannel();
                             return;
                         }
@@ -103,16 +101,16 @@ public class AlarmService {
                             }
                         }
                         alarmTimeMap.put(channel, LocalDateTime.now());
-                        AlarmMailInfo alarmMailInfo = new AlarmMailInfo();
-                        alarmMailInfo.setChannel(channelInfo);
+                        CaptureMailInfo captureMailInfo = new CaptureMailInfo();
+                        captureMailInfo.setChannel(channelInfo);
                         if (!CollectionUtils.isEmpty(fileAttachments)) {
-                            alarmMailInfo.setFileImages(fileAttachments);
+                            captureMailInfo.setFileImages(fileAttachments);
                         }
                         if (!CollectionUtils.isEmpty(streamAttachments)) {
-                            alarmMailInfo.setStreamImages(streamAttachments);
+                            captureMailInfo.setStreamImages(streamAttachments);
                         }
                         if (!CollectionUtils.isEmpty(streamAttachments) || !CollectionUtils.isEmpty(fileAttachments)) {
-                            ALARM_QUEUE.add(alarmMailInfo);
+                            CAPTURE_QUEUE.add(captureMailInfo);
                             mailService.checkAndSendMail();
                         }
                     }

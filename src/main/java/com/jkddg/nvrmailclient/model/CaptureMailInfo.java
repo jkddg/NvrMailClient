@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class AlarmMailInfo {
+public class CaptureMailInfo {
     ChannelInfo channel;
     List<String> fileImages;
     List<MailStreamAttachment> streamImages;

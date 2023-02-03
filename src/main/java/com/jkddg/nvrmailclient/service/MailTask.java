@@ -36,7 +36,7 @@ public class MailTask {
      */
     private static LocalDateTime lastExecutionTime = null;
     @Autowired
-    AlarmService alarmService;
+    CaptureService captureService;
 
 
     @Scheduled(fixedRate = 2 * 1000)   //定时器定义，设置执行时间
@@ -65,7 +65,7 @@ public class MailTask {
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
         if (!CollectionUtils.isEmpty(list)) {
             List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
-            alarmService.alarmAppendQueue(channels);
+            captureService.appendCaptureQueue(channels);
         }
     }
 
