@@ -6,7 +6,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 /**
@@ -43,20 +42,13 @@ public class NvrConfigConstant {
     /**
      * 白天抓图时间间隔
      */
-    public static int daytimeCaptureIntervalSecond = 60;
+    public static int defaultCaptureIntervalSecond = 60;
     /**
-     * 夜晚抓图时间间隔
+     * 自定义时间段抓图时间间隔
      */
-    public static int nightCaptureIntervalSecond = 60;
+    public static String customCaptureInterval;
 
-    /**
-     * 白天开始时间
-     */
-    public static LocalTime daytimeStart;
-    /**
-     * 白天结束时间
-     */
-    public static LocalTime daytimeEnd;
+
 
     @PostConstruct
     public void readConfig() {
@@ -81,9 +73,7 @@ public class NvrConfigConstant {
         sdkLogWin = env.getProperty("nvr.win-sdk-log");
         sdkLogLinux = env.getProperty("nvr.linux-sdk-log");
         captureInMemory = Boolean.parseBoolean(env.getProperty("nvr.capture.in-memory"));
-        daytimeCaptureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.daytime-capture-interval-second"));
-        nightCaptureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.night-capture-interval-second"));
-        daytimeStart = DateUtil.getTimeFromStr(env.getProperty("nvr.capture.daytime-start"));
-        daytimeEnd = DateUtil.getTimeFromStr(env.getProperty("nvr.capture.daytime-end"));
+        defaultCaptureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.default-capture-interval-second"));
+        customCaptureInterval = env.getProperty("nvr.capture.custom-capture-interval");
     }
 }

@@ -27,7 +27,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Component
 public class CaptureService {
 
-    //    static Map<Integer, AlarmLockObject> lockMap = new ConcurrentHashMap<>();
+//    public static final ExecutorService executorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), 16, 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(16), new ThreadPoolExecutor.DiscardPolicy());
+
     public static Queue<CaptureMailInfo> CAPTURE_QUEUE = new LinkedBlockingQueue<>();
 
     static Map<Integer, LocalDateTime> alarmTimeMap = new HashMap<>();//key=通道号，value=上次预警时间

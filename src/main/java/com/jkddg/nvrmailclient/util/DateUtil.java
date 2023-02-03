@@ -17,7 +17,7 @@ public class DateUtil {
     private static final String FOR_MAT_PATTEN_2 = "yyyyMM";
     private static final String FOR_MAT_PATTEN_3 = "yyyyMMdd";
 
-    private static final String TIME_PATTEN = "HH:mm:ss";
+    private static final String TIME_PATTEN = "HH:mm";
 
     /**
      * LocalDateTime 转str

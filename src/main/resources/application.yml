@@ -85,10 +85,8 @@ nvr:
     count: 1
     sleep-second: 3
     pic-quality: 1
-    daytime-capture-interval-second: 60
-    night-capture-interval-second: 60
-    daytime-start: "06:30:00"
-    daytime-end: "18:00:00"
+    default-capture-interval-second: 60
+    custom-capture-interval: "06:30-12:00-60,12:00-18:00-60"
   channel:
     flash-minute: 1
 
