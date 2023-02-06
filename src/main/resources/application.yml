@@ -86,7 +86,7 @@ nvr:
     sleep-second: 3
     pic-quality: 1
     default-capture-interval-second: 60
-    custom-capture-interval: "06:30-12:00-60,12:00-18:00-60"
+    custom-capture-interval: "05:00-07:30-120,17:00-20:00-120"
   channel:
     flash-minute: 1
 
