@@ -62,7 +62,7 @@ public class HumanBodyRecognition {
         /*
          * 下面附上第三个参数的详细解释
          */
-        Imgproc.cvtColor(srcImage, gary, Imgproc.COLOR_BGR2GRAY);
+//        Imgproc.cvtColor(srcImage, gary, Imgproc.COLOR_BGR2GRAY);
         /*
          * 使用默认参数创建HOG检测器。
          * 默认值（Size（64,128），Size（16,16），Size（8,8），Size（8,8），9）
@@ -101,12 +101,27 @@ public class HumanBodyRecognition {
              * @param thickness组成矩形的线的粗细。 负值（如#FILLED）表示该函数必须绘制一个填充的矩形。
              * @param lineType线的类型。 请参阅https://blog.csdn.net/ren365880/article/details/103952856
              */
-            Imgproc.rectangle(srcImage, new Point(rects[i].x, rects[i].y), new Point(rects[i].x + rects[i].width, rects[i].y + rects[i].height), new Scalar(0, 0, 255), 2, Imgproc.LINE_AA);
+            Rect matchRect = shrinkPanel(rects[i]);
+            Imgproc.rectangle(srcImage, new Point(matchRect.x, matchRect.y), new Point(matchRect.x + matchRect.width, matchRect.y + matchRect.height), new Scalar(0, 0, 255), 2, Imgproc.LINE_AA);
         }
         if (found) {
             return srcImage;
         }
         return null;
+    }
+
+    /**
+     * 原来的框太大，缩小一下
+     *
+     * @param rect
+     * @return
+     */
+    private static Rect shrinkPanel(Rect rect) {
+        rect.x = rect.x + (int) (rect.x * 0.01);
+        rect.y = rect.y + (int) (rect.y * 0.25);
+        rect.width = rect.width - (int) (rect.width * 0.2);
+        rect.height = rect.height - (int) (rect.height * 0.2);
+        return rect;
     }
 
     public static Mat getImageMat(String path) {
@@ -134,7 +149,10 @@ public class HumanBodyRecognition {
             fileInputStream.read(buffer);
             buffer = findPeople(buffer);
             if (buffer != null) {
-                File file1 = new File("D:\\human\\20230206095459.jpg");
+                File file1 = new File("D:\\human\\检测结果.jpg");
+                if (file1.exists()) {
+                    file1.delete();
+                }
                 FileOutputStream fileOutputStream = new FileOutputStream(file1);
                 fileOutputStream.write(buffer);
                 fileOutputStream.flush();
@@ -152,8 +170,8 @@ public class HumanBodyRecognition {
             return null;
         }
         MatOfByte matOfByte = new MatOfByte();
-        MatOfInt moi = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY,60);
-        Imgcodecs.imencode(".jpg", mat, matOfByte,moi);
+        MatOfInt moi = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, 60);
+        Imgcodecs.imencode(".jpg", mat, matOfByte, moi);
         return matOfByte.toArray();
     }
 

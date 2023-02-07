@@ -19,18 +19,18 @@ public class NvrMailClientApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(NvrMailClientApplication.class, args);
-        SDKInit.init();
+//        SDKInit.init();
         OpencvInit.init();
-//        HumanBodyRecognition.test();
-        int lUserID = LoginHelper.loginByConfig();
-        //1、布防
-        if (lUserID > -1) {
-            log.info("登录成功");
-            ConfigHelper.getCfg(lUserID);
-            AlarmHelper.StartAlarm(lUserID);
-        } else {
-            log.info("登录失败");
-        }
+        HumanBodyRecognition.test();
+//        int lUserID = LoginHelper.loginByConfig();
+//        //1、布防
+//        if (lUserID > -1) {
+//            log.info("登录成功");
+//            ConfigHelper.getCfg(lUserID);
+//            AlarmHelper.StartAlarm(lUserID);
+//        } else {
+//            log.info("登录失败");
+//        }
 
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override
