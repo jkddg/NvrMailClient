@@ -9,9 +9,12 @@ import javax.mail.util.ByteArrayDataSource;
  * @create 2023/1/12 12:14
  */
 @Data
-public class MailStreamAttachment {
+public class StreamFile {
 
-    private String name;
+    private String channelName;
+    private String fileName;
     private ByteArrayDataSource dataSource;
+    private byte[] dataByte;
+    private boolean identifiedPeople = false;
 
 }

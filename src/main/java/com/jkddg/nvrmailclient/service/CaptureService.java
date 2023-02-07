@@ -5,9 +5,9 @@ import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.hkHelper.CapturePictureHelper;
 import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.hkHelper.LoginHelper;
-import com.jkddg.nvrmailclient.model.CaptureMailInfo;
+import com.jkddg.nvrmailclient.model.ChannelCaptureInfo;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
-import com.jkddg.nvrmailclient.model.MailStreamAttachment;
+import com.jkddg.nvrmailclient.model.StreamFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class CaptureService {
 
 //    public static final ExecutorService executorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), 16, 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(16), new ThreadPoolExecutor.DiscardPolicy());
 
-    public static Queue<CaptureMailInfo> CAPTURE_QUEUE = new LinkedBlockingQueue<>();
+    public static Queue<ChannelCaptureInfo> CAPTURE_QUEUE = new LinkedBlockingQueue<>();
 
     static Map<Integer, LocalDateTime> alarmTimeMap = new HashMap<>();//key=通道号，value=上次预警时间
 
@@ -39,7 +39,7 @@ public class CaptureService {
     MailService mailService;
 
 
-    public void appendCaptureQueue(List<Integer> channels) {
+    public void appendCaptureQueue(List<Integer> channels,boolean sendImmediately) {
         if (!CollectionUtils.isEmpty(channels)) {
             if (SDKConstant.lUserID == -1) {
                 LoginHelper.loginByConfig();
@@ -73,12 +73,12 @@ public class CaptureService {
                         log.info("通道[" + channelInfo.getName() + "]触发抓图事件");
                         //2、通道截图
                         List<String> fileAttachments = new ArrayList<>();
-                        List<MailStreamAttachment> streamAttachments = new ArrayList<>();
+                        List<StreamFile> streamAttachments = new ArrayList<>();
                         String picPrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss-"));
                         for (int i = 0; i < NvrConfigConstant.captureCount; i++) {
                             if (NvrConfigConstant.captureInMemory) {
                                 //内存抓图
-                                MailStreamAttachment streamAttachment = capturePictureHelper.getMemoryImage(picPrefix + (i + 1), channelInfo);
+                                StreamFile streamAttachment = capturePictureHelper.getMemoryImage(picPrefix + (i + 1), channelInfo);
                                 if (streamAttachment != null) {
                                     streamAttachments.add(streamAttachment);
                                 } else {
@@ -102,16 +102,17 @@ public class CaptureService {
                             }
                         }
                         alarmTimeMap.put(channel, LocalDateTime.now());
-                        CaptureMailInfo captureMailInfo = new CaptureMailInfo();
-                        captureMailInfo.setChannel(channelInfo);
+                        ChannelCaptureInfo channelCaptureInfo = new ChannelCaptureInfo();
+                        channelCaptureInfo.setChannel(channelInfo);
                         if (!CollectionUtils.isEmpty(fileAttachments)) {
-                            captureMailInfo.setFileImages(fileAttachments);
+                            channelCaptureInfo.setFileImages(fileAttachments);
                         }
                         if (!CollectionUtils.isEmpty(streamAttachments)) {
-                            captureMailInfo.setStreamImages(streamAttachments);
+                            channelCaptureInfo.setStreamImages(streamAttachments);
                         }
                         if (!CollectionUtils.isEmpty(streamAttachments) || !CollectionUtils.isEmpty(fileAttachments)) {
-                            CAPTURE_QUEUE.add(captureMailInfo);
+                            CAPTURE_QUEUE.add(channelCaptureInfo);
+
                             mailService.checkAndSendMail();
                         }
                     }

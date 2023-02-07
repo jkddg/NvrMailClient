@@ -3,9 +3,9 @@ package com.jkddg.nvrmailclient.service;
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.email.MultipleMailService;
-import com.jkddg.nvrmailclient.model.CaptureMailInfo;
+import com.jkddg.nvrmailclient.model.ChannelCaptureInfo;
 import com.jkddg.nvrmailclient.model.MailRequest;
-import com.jkddg.nvrmailclient.model.MailStreamAttachment;
+import com.jkddg.nvrmailclient.model.StreamFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author 黄永好
@@ -62,9 +63,9 @@ public class MailService {
         if (SDKConstant.lUserID > -1) {
 //            log.info("检查发送邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
             if (!CaptureService.CAPTURE_QUEUE.isEmpty()) {
-                Map<Integer, CaptureMailInfo> tempMailInfo = new HashMap<>();
+                Map<Integer, ChannelCaptureInfo> tempMailInfo = new HashMap<>();
                 while (!CaptureService.CAPTURE_QUEUE.isEmpty()) {
-                    CaptureMailInfo mailInfo = CaptureService.CAPTURE_QUEUE.poll();
+                    ChannelCaptureInfo mailInfo = CaptureService.CAPTURE_QUEUE.poll();
                     if (mailInfo == null) {
                         break;
                     }
@@ -76,23 +77,23 @@ public class MailService {
                     }
                 }
                 if (!tempMailInfo.isEmpty()) {
-                    List<CaptureMailInfo> tempList = new ArrayList<>(tempMailInfo.values());
+                    List<ChannelCaptureInfo> tempList = new ArrayList<>(tempMailInfo.values());
                     List<String> fileAttachments = new ArrayList<>();
-                    List<MailStreamAttachment> streamAttachments = new ArrayList<>();
+                    List<StreamFile> streamFiles = new ArrayList<>();
                     String warnChannel = new String();
-                    for (CaptureMailInfo alarmInfo : tempList) {
+                    for (ChannelCaptureInfo channelCaptureInfo : tempList) {
                         if (StringUtils.hasText(warnChannel)) {
                             warnChannel = warnChannel + "-";
                         }
-                        warnChannel = warnChannel + alarmInfo.getChannel().getName();
-                        if (!CollectionUtils.isEmpty(alarmInfo.getFileImages())) {
-                            fileAttachments.addAll(alarmInfo.getFileImages());
+                        warnChannel = warnChannel + channelCaptureInfo.getChannel().getName();
+                        if (!CollectionUtils.isEmpty(channelCaptureInfo.getFileImages())) {
+                            fileAttachments.addAll(channelCaptureInfo.getFileImages());
                         }
-                        if (!CollectionUtils.isEmpty(alarmInfo.getStreamImages())) {
-                            streamAttachments.addAll(alarmInfo.getStreamImages());
+                        if (!CollectionUtils.isEmpty(channelCaptureInfo.getStreamImages())) {
+                            streamFiles.addAll(channelCaptureInfo.getStreamImages());
                         }
                     }
-                    if (!CollectionUtils.isEmpty(streamAttachments) || !CollectionUtils.isEmpty(fileAttachments)) {
+                    if (!CollectionUtils.isEmpty(streamFiles) || !CollectionUtils.isEmpty(fileAttachments)) {
 
                         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
                         //3、发送邮件
@@ -101,7 +102,7 @@ public class MailService {
                         mailRequest.setSendTo(NvrConfigConstant.mailTo);
                         mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
                         mailRequest.setFileAttachments(fileAttachments);
-                        mailRequest.setStreamAttachments(streamAttachments);
+                        mailRequest.setStreamAttachments(streamFiles);
                         multipleMailService.sendMail(mailRequest);
                         if (!CollectionUtils.isEmpty(fileAttachments)) {
                             for (String filePath : fileAttachments) {
@@ -114,6 +115,23 @@ public class MailService {
                     }
                 }
             }
+        }
+    }
+
+    public void sendMail(List<StreamFile> streamFiles) {
+        if (!CollectionUtils.isEmpty(streamFiles)) {
+            List<String> channelNames = streamFiles.stream().map(p -> {
+                return p.getChannelName();
+            }).distinct().collect(Collectors.toList());
+            String warnChannel = String.join("-", channelNames.toArray(new String[0]));
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            //3、发送邮件
+            MailRequest mailRequest = new MailRequest();
+            mailRequest.setSubject(SDKConstant.NvrName + "有人抓图-" + warnChannel);
+            mailRequest.setSendTo(NvrConfigConstant.mailTo);
+            mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
+            mailRequest.setStreamAttachments(streamFiles);
+            multipleMailService.sendMail(mailRequest);
         }
     }
 }

@@ -5,6 +5,7 @@ import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.hkHelper.AlarmHelper;
 import com.jkddg.nvrmailclient.hkHelper.ConfigHelper;
 import com.jkddg.nvrmailclient.hkHelper.LoginHelper;
+import com.jkddg.nvrmailclient.opencv.HumanBodyRecognition;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,6 +20,8 @@ public class NvrMailClientApplication {
     public static void main(String[] args) {
         SpringApplication.run(NvrMailClientApplication.class, args);
         SDKInit.init();
+        OpencvInit.init();
+//        HumanBodyRecognition.test();
         int lUserID = LoginHelper.loginByConfig();
         //1、布防
         if (lUserID > -1) {

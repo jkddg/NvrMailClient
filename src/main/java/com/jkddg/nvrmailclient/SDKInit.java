@@ -121,6 +121,7 @@ public class SDKInit {
 //                        strDllPath = System.getProperty("user.dir") + "\\lib\\HCNetSDK.dll";
 //                        mvn install:install-file "-DgroupId=net.java.jna" "-DartifactId=jna" "-Dversion=1.0.0" "-Dpackaging=jar" "-Dfile=D:\Mtime\jna.jar"
 //                        mvn install:install-file "-DgroupId=net.java.jna" "-DartifactId=examples" "-Dversion=1.0.0" "-Dpackaging=jar" "-Dfile=D:\Mtime\examples.jar"
+                    //    mvn install:install-file "-DgroupId=org.opencv" "-DartifactId=opencv" "-Dversion=4.6.0" "-Dpackaging=jar" "-Dfile=D:\Mtime\Project\opencv460\build\java\opencv-460.jar"
 
                         NvrConfigConstant.captureFolder = NvrConfigConstant.captureFolderWin;
                         strDllPath = NvrConfigConstant.winLibPath + "HCNetSDK.dll";
@@ -143,6 +144,5 @@ public class SDKInit {
         }
         return true;
     }
-
 
 }
