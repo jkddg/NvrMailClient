@@ -3,6 +3,7 @@ package com.jkddg.nvrmailclient.service;
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.email.MultipleMailService;
+import com.jkddg.nvrmailclient.model.CapturePool;
 import com.jkddg.nvrmailclient.model.ChannelCaptureInfo;
 import com.jkddg.nvrmailclient.model.MailRequest;
 import com.jkddg.nvrmailclient.model.StreamFile;
@@ -118,7 +119,7 @@ public class MailService {
         }
     }
 
-    public void sendMail(List<StreamFile> streamFiles) {
+    public void sendMail(List<StreamFile> streamFiles,String extInfo) {
         if (!CollectionUtils.isEmpty(streamFiles)) {
             List<String> channelNames = streamFiles.stream().map(p -> {
                 return p.getChannelName();
@@ -127,11 +128,20 @@ public class MailService {
             Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
             //3、发送邮件
             MailRequest mailRequest = new MailRequest();
-            mailRequest.setSubject(SDKConstant.NvrName + "有人抓图-" + warnChannel);
+            mailRequest.setSubject(SDKConstant.NvrName + extInfo + warnChannel);
             mailRequest.setSendTo(NvrConfigConstant.mailTo);
             mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
             mailRequest.setStreamAttachments(streamFiles);
             multipleMailService.sendMail(mailRequest);
         }
+    }
+
+    public void sendPeopleMail(){
+        List<StreamFile> streamFiles= CapturePool.pollIdentified();
+        if(CollectionUtils.isEmpty(streamFiles)){
+            return;
+        }
+        this.sendMail(streamFiles,"[有人抓图]");
+
     }
 }

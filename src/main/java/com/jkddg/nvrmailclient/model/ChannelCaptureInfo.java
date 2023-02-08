@@ -1,6 +1,5 @@
 package com.jkddg.nvrmailclient.model;
 
-import com.jkddg.nvrmailclient.notify.NotifyBase;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,6 +17,5 @@ public class ChannelCaptureInfo {
     private List<String> fileImages;
     private List<StreamFile> streamImages;
     private List<StreamFile> peopleImages;
-    private List<NotifyBase> notifyList;
 
 }

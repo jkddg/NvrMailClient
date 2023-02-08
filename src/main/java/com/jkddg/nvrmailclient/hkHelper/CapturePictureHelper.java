@@ -102,12 +102,13 @@ public class CapturePictureHelper {
         if (resBytes == null) {
             return null;
         }
-        ByteArrayDataSource dataSource = new ByteArrayDataSource(resBytes, "image/jpeg");
+//        ByteArrayDataSource dataSource = new ByteArrayDataSource(resBytes, "image/jpeg");
         StreamFile streamFile = new StreamFile();
         streamFile.setDataByte(resBytes);
-        streamFile.setDataSource(dataSource);
+//        streamFile.setDataSource(dataSource);
         streamFile.setFileName(channel.getName() + "-" + indexNo + ".jpg".trim());
         streamFile.setChannelName(channel.getName());
+        streamFile.setChannelNumber(channel.getNumber());
         return streamFile;
     }
 

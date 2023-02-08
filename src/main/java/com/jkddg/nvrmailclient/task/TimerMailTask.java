@@ -12,24 +12,27 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
+
 /**
  * @Author 黄永好
- * @create 2023/2/7 15:14
+ * @create 2023/1/13 9:26
  */
 @Slf4j
 @Component
-public class IdentifiedMailTask {
+public class TimerMailTask {
+
 
     @Autowired
     private MailService mailService;
-
-    @Scheduled(fixedDelay = 2 * 1000)   //定时器定义，设置执行时间
+    @Scheduled(fixedRate =  3 * 60 * 1000)   //定时器定义，设置执行时间
     @Async("taskPoolExecutor")
     public void timerMailSend() {
-        List<StreamFile> list = CapturePool.pollIdentified();
+        List<StreamFile> list = CapturePool.poll();
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
-        mailService.sendMail(list);
+        mailService.sendMail(list,"[抓图]");
     }
+
+
 }

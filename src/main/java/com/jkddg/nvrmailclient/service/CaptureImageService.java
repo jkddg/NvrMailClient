@@ -7,13 +7,11 @@ import com.jkddg.nvrmailclient.hkHelper.LoginHelper;
 import com.jkddg.nvrmailclient.model.CapturePool;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.jkddg.nvrmailclient.model.StreamFile;
-import com.jkddg.nvrmailclient.opencv.HumanBodyRecognition;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.mail.util.ByteArrayDataSource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,6 +26,8 @@ import java.util.concurrent.*;
 @Component
 public class CaptureImageService {
 
+    @Autowired
+    private CapturePool capturePool;
     public static final ExecutorService executorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), 32, 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(64), new ThreadPoolExecutor.DiscardPolicy());
     @Autowired
     private CapturePictureHelper capturePictureHelper;
@@ -59,13 +59,7 @@ public class CaptureImageService {
                         //内存抓图
                         StreamFile streamFile = capturePictureHelper.getMemoryImage(picPrefix, channelInfo);
                         if (streamFile != null) {
-                            byte[] resByte = HumanBodyRecognition.findPeople(streamFile.getDataByte());
-                            if (resByte != null) {
-                                streamFile.setIdentifiedPeople(true);
-                                streamFile.setDataSource(new ByteArrayDataSource(resByte, "image/jpeg"));
-                            }
-                            streamFile.setDataByte(null);
-                            CapturePool.push(channelInfo, streamFile);
+                            capturePool.push(channelInfo, streamFile);
                         } else {
                             log.warn(channelInfo.getName() + "内存抓图失败");
                         }

@@ -1,4 +1,4 @@
-package com.jkddg.nvrmailclient.task;
+package com.jkddg.nvrmailclient.util;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -10,13 +10,13 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @Author 黄永好
- * @create 2023/2/7 15:15
+ * @create 2023/2/8 14:16
  */
 @Component
-public class BaseTask {
+public class ExecutorServiceUtil {
     @Bean(name = "taskPoolExecutor")
     public ExecutorService taskPoolExecutor() {
-        ExecutorService poolExecutor = new ThreadPoolExecutor(2, 4, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy());
+        ExecutorService poolExecutor = new ThreadPoolExecutor(2, 4, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
         return poolExecutor;
     }
 }

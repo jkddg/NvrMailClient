@@ -24,7 +24,7 @@ public class CaptureTask {
     @Autowired
     private CaptureImageService captureImageService;
 
-    @Scheduled(fixedDelay = 2 * 1000)   //定时器定义，设置执行时间
+    @Scheduled(fixedDelay = 3 * 1000)   //定时器定义，设置执行时间
     public void timerCapture() {
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
         if (!CollectionUtils.isEmpty(list)) {

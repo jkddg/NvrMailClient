@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.File;
 import java.util.*;
 
@@ -107,8 +108,9 @@ public class MultipleMailService {
         mimeMessageHelper.setText(text, true);
         if (!CollectionUtils.isEmpty(streamAttachments)) {
             for (StreamFile attachment : streamAttachments) {
-                if (attachment != null && attachment.getDataSource() != null) {
-                    mimeMessageHelper.addAttachment(attachment.getFileName(), attachment.getDataSource());
+                if (attachment != null && attachment.getDataByte() != null) {
+                    ByteArrayDataSource dataSource = new ByteArrayDataSource(attachment.getDataByte(), "image/jpeg");
+                    mimeMessageHelper.addAttachment(attachment.getFileName(), dataSource);
                 }
             }
         }
