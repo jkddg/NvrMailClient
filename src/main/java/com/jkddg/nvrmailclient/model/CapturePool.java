@@ -43,18 +43,13 @@ public class CapturePool {
                 if (CollectionUtils.isEmpty(streamFiles)) {
                     return;
                 }
-                boolean findPeople = false;
                 for (StreamFile file : streamFiles) {
                     byte[] resByte = HumanBodyRecognition.findPeople(file.getDataByte());
                     if (resByte != null) {
                         file.setIdentifiedPeople(true);
                         file.setDataByte(resByte);
                         capturePeopleQueue.add(file);
-                        findPeople = true;
                     }
-                }
-                if (findPeople) {
-
                 }
             }
         });
