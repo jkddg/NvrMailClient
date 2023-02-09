@@ -30,7 +30,7 @@ public class ScheduleCaptureService {
 
     @Autowired
     private CapturePool capturePool;
-    public static final ExecutorService executorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(), 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(64), new ThreadPoolExecutor.DiscardPolicy());
+    public final ExecutorService executorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(), 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(64), new ThreadPoolExecutor.DiscardPolicy());
     @Autowired
     private CapturePictureHelper capturePictureHelper;
 

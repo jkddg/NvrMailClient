@@ -27,6 +27,7 @@ public class CapturePool {
     private ExecutorService poolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(), 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5), new ThreadPoolExecutor.DiscardPolicy());
 
 
+
     public void schedulePush(ChannelInfo channelInfo, StreamFile streamFile) {
         if (!scheduleCaptureMap.containsKey(channelInfo)) {
             FixedQueue<StreamFile> queue = new FixedQueue<>(2);
