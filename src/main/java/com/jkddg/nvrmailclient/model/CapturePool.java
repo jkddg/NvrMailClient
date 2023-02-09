@@ -1,5 +1,6 @@
 package com.jkddg.nvrmailclient.model;
 
+import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.opencv.HumanBodyRecognition;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -19,18 +20,19 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class CapturePool {
-    private static Map<ChannelInfo, FixedQueue<StreamFile>> captureMap = new HashMap<>();
+    private static Map<ChannelInfo, FixedQueue<StreamFile>> scheduleCaptureMap = new HashMap<>();
+    private static Map<ChannelInfo, FixedQueue<StreamFile>> alarmCaptureMap = new HashMap<>();
     private static LinkedBlockingQueue<StreamFile> capturePeopleQueue = new LinkedBlockingQueue<>();
     private static LinkedBlockingQueue<StreamFile> tempCaptureQueue = new LinkedBlockingQueue<>(5);
     private ExecutorService poolExecutor = new ThreadPoolExecutor(2, 4, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5), new ThreadPoolExecutor.DiscardPolicy());
 
 
-    public void push(ChannelInfo channelInfo, StreamFile streamFile) {
-        if (!captureMap.containsKey(channelInfo)) {
+    public void schedulePush(ChannelInfo channelInfo, StreamFile streamFile) {
+        if (!scheduleCaptureMap.containsKey(channelInfo)) {
             FixedQueue<StreamFile> queue = new FixedQueue<>(2);
-            captureMap.put(channelInfo, queue);
+            scheduleCaptureMap.put(channelInfo, queue);
         }
-        captureMap.get(channelInfo).add(streamFile);
+        scheduleCaptureMap.get(channelInfo).add(streamFile);
         tempCaptureQueue.offer(streamFile);
         poolExecutor.submit(new Runnable() {
             @Override
@@ -58,21 +60,39 @@ public class CapturePool {
         });
     }
 
-    public static List<StreamFile> poll() {
+    public void alarmPush(ChannelInfo channelInfo, StreamFile streamFile) {
+        if (!alarmCaptureMap.containsKey(channelInfo)) {
+            FixedQueue<StreamFile> queue = new FixedQueue<>(NvrConfigConstant.alarmCaptureCount);
+            alarmCaptureMap.put(channelInfo, queue);
+        }
+        alarmCaptureMap.get(channelInfo).add(streamFile);
+    }
+
+    public static List<StreamFile> pollAlarm() {
         List<StreamFile> streamFiles = new ArrayList<>();
-        for (ChannelInfo channelInfo : captureMap.keySet()) {
-            StreamFile streamFile = null;
-            while (!captureMap.get(channelInfo).isEmpty()) {
-                streamFile = captureMap.get(channelInfo).poll();
-            }
-            if (streamFile != null) {
-                streamFiles.add(streamFile);
+        for (ChannelInfo channelInfo : alarmCaptureMap.keySet()) {
+            List<StreamFile> queueList = new ArrayList<>();
+            alarmCaptureMap.get(channelInfo).drainTo(queueList);
+            if (queueList.size() > 0) {
+                streamFiles.addAll(queueList);
             }
         }
         return streamFiles;
     }
 
-    public static List<StreamFile> pollIdentified() {
+    public static List<StreamFile> pollSchedule() {
+        List<StreamFile> streamFiles = new ArrayList<>();
+        for (ChannelInfo channelInfo : scheduleCaptureMap.keySet()) {
+            List<StreamFile> queueList = new ArrayList<>();
+            scheduleCaptureMap.get(channelInfo).drainTo(queueList);
+            if (queueList.size() > 0) {
+                streamFiles.add(queueList.get(queueList.size() - 1));
+            }
+        }
+        return streamFiles;
+    }
+
+    public static List<StreamFile> pollPeople() {
         List<StreamFile> streamFiles = new ArrayList<>();
         capturePeopleQueue.drainTo(streamFiles);
         return streamFiles;

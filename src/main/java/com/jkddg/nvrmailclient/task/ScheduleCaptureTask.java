@@ -3,7 +3,7 @@ package com.jkddg.nvrmailclient.task;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
-import com.jkddg.nvrmailclient.service.CaptureImageService;
+import com.jkddg.nvrmailclient.service.capture.ScheduleCaptureService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class CaptureTask {
+public class ScheduleCaptureTask {
 
     @Autowired
-    private CaptureImageService captureImageService;
+    private ScheduleCaptureService scheduleCaptureService;
 
     @Scheduled(fixedDelay = 3 * 1000)   //定时器定义，设置执行时间
     public void timerCapture() {
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
         if (!CollectionUtils.isEmpty(list)) {
             List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
-            captureImageService.captureToPool(channels);
+            scheduleCaptureService.captureToPool(channels);
         }
     }
 }

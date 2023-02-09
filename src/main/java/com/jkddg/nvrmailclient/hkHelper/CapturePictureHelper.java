@@ -97,7 +97,7 @@ public class CapturePictureHelper {
 
     }
 
-    public StreamFile getMemoryImage(String indexNo, ChannelInfo channel) {
+    public StreamFile getMemoryImage(String fileName, ChannelInfo channel) {
         byte[] resBytes = getMemoryImageByte(channel);
         if (resBytes == null) {
             return null;
@@ -106,7 +106,7 @@ public class CapturePictureHelper {
         StreamFile streamFile = new StreamFile();
         streamFile.setDataByte(resBytes);
 //        streamFile.setDataSource(dataSource);
-        streamFile.setFileName(channel.getName() + "-" + indexNo + ".jpg".trim());
+        streamFile.setFileName(channel.getName() + "-" + fileName + ".jpg".trim());
         streamFile.setChannelName(channel.getName());
         streamFile.setChannelNumber(channel.getNumber());
         return streamFile;

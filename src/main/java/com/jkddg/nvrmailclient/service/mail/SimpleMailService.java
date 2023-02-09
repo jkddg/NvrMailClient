@@ -1,4 +1,4 @@
-package com.jkddg.nvrmailclient.email;
+package com.jkddg.nvrmailclient.service.mail;
 
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.model.MailRequest;

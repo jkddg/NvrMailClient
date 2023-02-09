@@ -82,15 +82,14 @@ nvr:
     #	当分辨率为3=UXGA(1600x1200), 4=SVGA(800x600), 5=HD720p(1280x720),6=VGA,7=XVGA, 8=HD900p
     #	仅支持当前分辨率的抓图
     pic-size: 5
-    count: 1
-    sleep-second: 3
+    interval-second: 3
     pic-quality: 1
     default-capture-interval-second: 60
     custom-capture-interval: "05:00-07:30-120,17:00-20:00-120"
   channel:
     flash-minute: 1
-
   alarm:
+    capture-count: 3
     interval-second: 30
     mail-interval-second: 150
   mail-to: jkddg2022@163.com

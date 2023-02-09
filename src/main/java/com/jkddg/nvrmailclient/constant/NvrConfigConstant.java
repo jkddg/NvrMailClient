@@ -19,7 +19,8 @@ public class NvrConfigConstant {
     public static String serverUser;
     public static String serverPwd;
     public static short capturePicSize;
-    public static int captureCount;
+    public static int captureScheduleCount;
+    public static int alarmCaptureCount;
     public static int captureIntervalSecond;
     public static String captureFolder;
     public static String captureFolderLinux;
@@ -47,7 +48,6 @@ public class NvrConfigConstant {
     public static String customCaptureInterval;
 
 
-
     @PostConstruct
     public void readConfig() {
 
@@ -60,12 +60,12 @@ public class NvrConfigConstant {
         captureFolderWin = env.getProperty("nvr.capture.folder-win");
         captureFolderLinux = env.getProperty("nvr.capture.folder-linux");
         capturePicSize = Short.parseShort(env.getProperty("nvr.capture.pic-size"));
-        captureCount = Integer.parseInt(env.getProperty("nvr.capture.count"));
+        captureScheduleCount = Integer.parseInt(env.getProperty("nvr.capture.schedule-count"));
         alarmIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.interval-second"));
         mailIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.mail-interval-second"));
         mailTo = env.getProperty("nvr.mail-to");
         mailSSl = Boolean.parseBoolean(env.getProperty("jakarta.mail.ssl"));
-        captureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.sleep-second"));
+        captureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.interval-second"));
         channelFlashMinute = Integer.parseInt(env.getProperty("nvr.channel.flash-minute"));
         capturePicQuality = Short.parseShort(env.getProperty("nvr.capture.pic-quality"));
         sdkLogWin = env.getProperty("nvr.win-sdk-log");
@@ -73,5 +73,6 @@ public class NvrConfigConstant {
         captureInMemory = Boolean.parseBoolean(env.getProperty("nvr.capture.in-memory"));
         defaultCaptureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.default-capture-interval-second"));
         customCaptureInterval = env.getProperty("nvr.capture.custom-capture-interval");
+        alarmCaptureCount = Integer.parseInt(env.getProperty("nvr.alarm.capture-count"));
     }
 }
