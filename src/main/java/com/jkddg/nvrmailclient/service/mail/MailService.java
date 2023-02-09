@@ -85,7 +85,7 @@ public class MailService {
         }
     }
 
-    public void sendScheduleMail(List<StreamFile> streamFiles, String extInfo) {
+    public void sendMail(List<StreamFile> streamFiles, String extInfo) {
         if (!CollectionUtils.isEmpty(streamFiles)) {
             List<String> channelNames = streamFiles.stream().map(p -> {
                 return p.getChannelName();
@@ -102,12 +102,5 @@ public class MailService {
         }
     }
 
-    public void sendPeopleMail() {
-        List<StreamFile> streamFiles = CapturePool.pollPeople();
-        if (CollectionUtils.isEmpty(streamFiles)) {
-            return;
-        }
-        this.sendScheduleMail(streamFiles, "[有人抓图]");
 
-    }
 }

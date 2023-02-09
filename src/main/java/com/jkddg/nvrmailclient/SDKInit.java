@@ -32,7 +32,6 @@ public class SDKInit {
         log.info("serverUser=" + NvrConfigConstant.serverUser);
         log.info("serverPwd=" + NvrConfigConstant.serverPwd);
         log.info("capturePicSize=" + NvrConfigConstant.capturePicSize);
-        log.info("captureCount=" + NvrConfigConstant.captureScheduleCount);
         log.info("captureIntervalSecond=" + NvrConfigConstant.captureIntervalSecond);
         log.info("captureFolder=" + NvrConfigConstant.captureFolder);
         log.info("captureFolderLinux=" + NvrConfigConstant.captureFolderLinux);

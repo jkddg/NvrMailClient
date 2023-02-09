@@ -24,7 +24,7 @@ public class CapturePool {
     private static Map<ChannelInfo, FixedQueue<StreamFile>> alarmCaptureMap = new HashMap<>();
     private static LinkedBlockingQueue<StreamFile> capturePeopleQueue = new LinkedBlockingQueue<>();
     private static LinkedBlockingQueue<StreamFile> tempCaptureQueue = new LinkedBlockingQueue<>(5);
-    private ExecutorService poolExecutor = new ThreadPoolExecutor(2, 4, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5), new ThreadPoolExecutor.DiscardPolicy());
+    private ExecutorService poolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(), 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(5), new ThreadPoolExecutor.DiscardPolicy());
 
 
     public void schedulePush(ChannelInfo channelInfo, StreamFile streamFile) {
@@ -50,7 +50,6 @@ public class CapturePool {
                         file.setDataByte(resByte);
                         capturePeopleQueue.add(file);
                         findPeople = true;
-//                        file.setDataSource(new ByteArrayDataSource(resByte, "image/jpeg"));
                     }
                 }
                 if (findPeople) {

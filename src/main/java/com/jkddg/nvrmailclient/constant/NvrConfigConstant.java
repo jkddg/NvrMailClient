@@ -19,7 +19,6 @@ public class NvrConfigConstant {
     public static String serverUser;
     public static String serverPwd;
     public static short capturePicSize;
-    public static int captureScheduleCount;
     public static int alarmCaptureCount;
     public static int captureIntervalSecond;
     public static String captureFolder;
@@ -60,7 +59,6 @@ public class NvrConfigConstant {
         captureFolderWin = env.getProperty("nvr.capture.folder-win");
         captureFolderLinux = env.getProperty("nvr.capture.folder-linux");
         capturePicSize = Short.parseShort(env.getProperty("nvr.capture.pic-size"));
-        captureScheduleCount = Integer.parseInt(env.getProperty("nvr.capture.schedule-count"));
         alarmIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.interval-second"));
         mailIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.mail-interval-second"));
         mailTo = env.getProperty("nvr.mail-to");

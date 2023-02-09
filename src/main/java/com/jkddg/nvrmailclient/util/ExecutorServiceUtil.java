@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class ExecutorServiceUtil {
     @Bean(name = "taskPoolExecutor")
     public ExecutorService taskPoolExecutor() {
-        ExecutorService poolExecutor = new ThreadPoolExecutor(2, 4, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
+        ExecutorService poolExecutor = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), Runtime.getRuntime().availableProcessors(), 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
         return poolExecutor;
     }
 }

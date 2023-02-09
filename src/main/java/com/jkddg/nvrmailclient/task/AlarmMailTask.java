@@ -19,19 +19,19 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class ScheduleMailTask {
+public class AlarmMailTask {
 
 
     @Autowired
     private MailService mailService;
-    @Scheduled(fixedRate =  3 * 60 * 1000)   //定时器定义，设置执行时间
+    @Scheduled(fixedDelay =  2 * 1000)   //定时器定义，设置执行时间
     @Async("taskPoolExecutor")
-    public void timerMailSend() {
-        List<StreamFile> list = CapturePool.pollSchedule();
-        if (CollectionUtils.isEmpty(list)) {
+    public void alarmMailSend() {
+        List<StreamFile> streamFiles = CapturePool.pollPeople();
+        if (CollectionUtils.isEmpty(streamFiles)) {
             return;
         }
-        mailService.sendMail(list,"[抓图]");
+        mailService.sendMail(streamFiles, "[有人抓图]");
     }
 
 
