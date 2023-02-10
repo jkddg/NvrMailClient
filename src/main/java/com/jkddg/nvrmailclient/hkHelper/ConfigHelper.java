@@ -2,6 +2,7 @@ package com.jkddg.nvrmailclient.hkHelper;
 
 import com.jkddg.nvrmailclient.HCNetSDK;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
+import com.jkddg.nvrmailclient.util.ByteUtil;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +29,9 @@ public class ConfigHelper {
         }
         log.info("获取参数成功");
         m_strDeviceCfg.read();
-        log.info("设备名称:" + new String(m_strDeviceCfg.sDVRName).trim() + "设备序列号：" + new String(m_strDeviceCfg.sSerialNumber));
-        SDKConstant.NvrName = new String(m_strDeviceCfg.sDVRName).trim();
+        String nvrName = ByteUtil.byteToString(m_strDeviceCfg.sDVRName, "GBK");
+        log.info("设备名称:" + nvrName + ",设备序列号：" + new String(m_strDeviceCfg.sSerialNumber));
+        SDKConstant.NvrName = nvrName;
         log.info("模拟通道个数" + m_strDeviceCfg.byChanNum);
         parseVersion(m_strDeviceCfg.dwSoftwareVersion);
         parseBuildTime(m_strDeviceCfg.dwSoftwareBuildDate);

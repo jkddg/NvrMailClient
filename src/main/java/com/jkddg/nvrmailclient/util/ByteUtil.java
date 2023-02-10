@@ -1,5 +1,7 @@
 package com.jkddg.nvrmailclient.util;
 
+import javax.swing.plaf.basic.BasicPanelUI;
+
 /**
  * @Author huangyonghao
  * @create 2023/1/11 21:44
@@ -36,6 +38,15 @@ public class ByteUtil {
         int[] result = new int[b.length];
         for (int i = 0; i < b.length; i++) {
             result[i] = b[i];
+        }
+        return result;
+    }
+    public static String byteToString(byte[] b,String charsetName){
+        String result = "";
+        try {
+            result = new String(b, charsetName).trim();
+        } catch (Exception ex) {
+
         }
         return result;
     }

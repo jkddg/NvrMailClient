@@ -69,7 +69,7 @@ nvr:
   win-lib-path: D:\hklib\
   win-sdk-log: D:\sdkLog
   server:
-    ip: 192.168.8.114
+    ip: 192.168.50.15  #192.168.8.114
     port: 8000
     user: admin
     pwd: abcd123456
