@@ -65,18 +65,22 @@ public class MailService {
         if (SDKConstant.lUserID > -1) {
 //            log.info("发送预警邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
             List<StreamFile> streamFiles = CapturePool.pollAlarm();
-            if (CollectionUtils.isEmpty(streamFiles)) {
+            if (!CollectionUtils.isEmpty(streamFiles)) {
                 String warnChannel = new String();
+                boolean findPeople = false;
                 for (StreamFile streamFile : streamFiles) {
                     if (StringUtils.hasText(warnChannel)) {
                         warnChannel = warnChannel + "-";
                     }
                     warnChannel = warnChannel + streamFile.getChannelName();
+                    if (streamFile.isIdentifiedPeople()) {
+                        findPeople = true;
+                    }
                 }
                 Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
                 //3、发送邮件
                 MailRequest mailRequest = new MailRequest();
-                mailRequest.setSubject(SDKConstant.NvrName + "抓图-" + warnChannel);
+                mailRequest.setSubject(SDKConstant.NvrName + (findPeople ? "[有人]" : "") + "抓图-" + warnChannel);
                 mailRequest.setSendTo(NvrConfigConstant.mailTo);
                 mailRequest.setText("录像机预警<br>录像机：" + SDKConstant.NvrName + "<br>通道：" + warnChannel + "<br>时间：" + LocalDateTime.now().toString().replace("T", " "));
                 mailRequest.setStreamAttachments(streamFiles);
