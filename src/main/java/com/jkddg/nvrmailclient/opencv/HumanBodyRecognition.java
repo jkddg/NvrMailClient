@@ -90,7 +90,7 @@ public class HumanBodyRecognition {
          * @param winStride窗口跨度。 它必须是跨步的倍数。
          * @param padding填充
          */
-        hog.detectMultiScale(gary, rect, new MatOfDouble(), 0, new Size(8, 8), new Size(0, 0), 1.1);
+        hog.detectMultiScale(gary, rect, new MatOfDouble(), 0, new Size(8, 8), new Size(0, 0), 1.09);
 
         Rect[] rects = rect.toArray();
         boolean found = false;
@@ -143,26 +143,30 @@ public class HumanBodyRecognition {
     }
 
     public static void test() {
-        File file = new File("D:\\human\\20230206095459-1.jpg");
-        try {
-            FileInputStream fileInputStream = new FileInputStream(file);
-            byte[] buffer = new byte[(int) file.length()];
-            fileInputStream.read(buffer);
-            fileInputStream.close();
-            buffer = findPeople(buffer);
-            if (buffer != null) {
-                File file1 = new File("D:\\human\\检测结果.jpg");
-                if (file1.exists()) {
-                    file1.delete();
+        String[] path = new String[]{"20230206095459-1.jpg", "2020011813492339.jpg", "内院-20230210123330-1.jpg", "前门-20230207165703-1.jpg"};
+        for (String s : path) {
+            File file = new File("D:\\human\\" + s);
+            try {
+                FileInputStream fileInputStream = new FileInputStream(file);
+                byte[] buffer = new byte[(int) file.length()];
+                fileInputStream.read(buffer);
+                fileInputStream.close();
+                buffer = findPeople(buffer);
+                if (buffer != null) {
+                    File file1 = new File("D:\\human\\结果\\结果" + s);
+                    if (file1.exists()) {
+                        file1.delete();
+                    }
+                    FileOutputStream fileOutputStream = new FileOutputStream(file1);
+                    fileOutputStream.write(buffer);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
                 }
-                FileOutputStream fileOutputStream = new FileOutputStream(file1);
-                fileOutputStream.write(buffer);
-                fileOutputStream.flush();
-                fileOutputStream.close();
+            } catch (Exception ex) {
+                log.error(ex.getMessage());
             }
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
         }
+
     }
 
     public static byte[] findPeople(byte[] srcImage) {

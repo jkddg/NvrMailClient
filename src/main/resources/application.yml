@@ -69,7 +69,7 @@ nvr:
   win-lib-path: D:\hklib\
   win-sdk-log: D:\sdkLog
   server:
-    ip: 192.168.50.15 #192.168.8.114
+    ip: 192.168.8.114 #192.168.8.114
     port: 8000
     user: admin
     pwd: abcd123456
@@ -85,7 +85,7 @@ nvr:
     sleep-second: 3
     pic-quality: 1
     default-capture-interval-second: 60
-    custom-capture-interval: "05:00-07:30-120,17:00-20:00-120"
+    custom-capture-interval: "04:00-07:30-120,17:00-20:00-120"
     find-people: true
   channel:
     flash-minute: 1
