@@ -91,9 +91,10 @@ public class CaptureService {
         if (streamFile != null) {
             if (NvrConfigConstant.findPeople) {
                 byte[] resByte = HumanBodyRecognition.findPeople(streamFile.getDataByte());
-                if (resByte != null)
+                if (resByte != null) {
                     streamFile.setDataByte(resByte);
-                streamFile.setIdentifiedPeople(true);
+                    streamFile.setIdentifiedPeople(true);
+                }
             }
             CAPTURE_QUEUE.add(streamFile);
         } else {

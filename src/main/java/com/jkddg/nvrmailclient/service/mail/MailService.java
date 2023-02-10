@@ -65,7 +65,7 @@ public class MailService {
     private void sendAlarmMail() {
         lastMailTime = LocalDateTime.now();
         if (SDKConstant.lUserID > -1) {
-            log.info("发送预警邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
+//            log.info("发送预警邮件" + Thread.currentThread().getName() + "," + LocalDateTime.now());
             List<StreamFile> streamFiles = new ArrayList<>();
             CAPTURE_QUEUE.drainTo(streamFiles);
             if (!CollectionUtils.isEmpty(streamFiles)) {
