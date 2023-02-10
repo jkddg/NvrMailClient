@@ -60,7 +60,7 @@ public class NvrConfigConstant {
         captureFolderWin = env.getProperty("nvr.capture.folder-win");
         captureFolderLinux = env.getProperty("nvr.capture.folder-linux");
         capturePicSize = Short.parseShort(env.getProperty("nvr.capture.pic-size"));
-        alarmCaptureCount = Integer.parseInt(env.getProperty("nvr.capture.count"));
+        alarmCaptureCount = Integer.parseInt(env.getProperty("nvr.alarm.capture-count"));
         alarmIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.interval-second"));
         mailIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.mail-interval-second"));
         mailTo = env.getProperty("nvr.mail-to");

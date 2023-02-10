@@ -30,7 +30,7 @@ public class ConfigHelper {
         log.info("获取参数成功");
         m_strDeviceCfg.read();
         String nvrName = ByteUtil.byteToString(m_strDeviceCfg.sDVRName, "GBK");
-        log.info("设备名称:" + nvrName + "设备序列号：" + new String(m_strDeviceCfg.sSerialNumber));
+        log.info("设备名称:" + nvrName + ",设备序列号：" + ByteUtil.byteToString(m_strDeviceCfg.sSerialNumber,"GBK"));
         SDKConstant.NvrName = nvrName;
         log.info("模拟通道个数" + m_strDeviceCfg.byChanNum);
         parseVersion(m_strDeviceCfg.dwSoftwareVersion);
