@@ -1,7 +1,7 @@
 package com.jkddg.nvrmailclient;
 
-import com.jkddg.nvrmailclient.email.MultipleMailService;
-import com.jkddg.nvrmailclient.email.SimpleMailService;
+import com.jkddg.nvrmailclient.service.mail.MultipleMailService;
+import com.jkddg.nvrmailclient.service.mail.SimpleMailService;
 import com.jkddg.nvrmailclient.hkHelper.CapturePictureHelper;
 import com.jkddg.nvrmailclient.model.MailRequest;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.jkddg.nvrmailclient.email;
+package com.jkddg.nvrmailclient.service.mail;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

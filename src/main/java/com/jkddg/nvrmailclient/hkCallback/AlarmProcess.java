@@ -46,7 +46,7 @@ public class AlarmProcess {
                 struAlarmInfo.read();
 //                log.info("报警类型：" + struAlarmInfo.dwAlarmType);  // 3-移动侦测
                 List<Integer> channel = filterAlarmChannel(struAlarmInfo);
-                captureService.appendCaptureQueue(channel);
+                captureService.alarmCapture(channel);
                 break;
             case HCNetSDK.COMM_ALARM_V40: //移动侦测、视频丢失、遮挡、IO信号量等报警信息，报警数据为可变长
                 log.warn("未处理的移动侦测类型COMM_ALARM_V40");

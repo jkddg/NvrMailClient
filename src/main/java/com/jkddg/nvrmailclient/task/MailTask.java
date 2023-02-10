@@ -1,10 +1,11 @@
-package com.jkddg.nvrmailclient.service;
+package com.jkddg.nvrmailclient.task;
 
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.jkddg.nvrmailclient.model.CustomCaptureConfig;
+import com.jkddg.nvrmailclient.service.CaptureService;
 import com.jkddg.nvrmailclient.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ public class MailTask {
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
         if (!CollectionUtils.isEmpty(list)) {
             List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
-            captureService.appendCaptureQueue(channels);
+            captureService.alarmCapture(channels);
         }
     }
 

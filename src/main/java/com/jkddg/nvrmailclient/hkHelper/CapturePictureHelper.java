@@ -4,7 +4,7 @@ import com.jkddg.nvrmailclient.HCNetSDK;
 import com.jkddg.nvrmailclient.constant.NvrConfigConstant;
 import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
-import com.jkddg.nvrmailclient.model.MailStreamAttachment;
+import com.jkddg.nvrmailclient.model.StreamFile;
 import com.sun.jna.ptr.IntByReference;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -97,19 +97,20 @@ public class CapturePictureHelper {
 
     }
 
-    public MailStreamAttachment getMemoryImage(String indexNo, ChannelInfo channel) {
-        ByteArrayDataSource dataSource = getMemoryImage(channel);
-        if (dataSource == null) {
+    public StreamFile getMemoryImage(String fileName, ChannelInfo channel) {
+        byte[] resBytes = getMemoryImageByte(channel);
+        if (resBytes == null) {
             return null;
         }
-        MailStreamAttachment streamAttachment = new MailStreamAttachment();
-        streamAttachment.setDataSource(dataSource);
-        streamAttachment.setName(channel.getName() + "-" + indexNo + ".jpg".trim());
-        return streamAttachment;
+        StreamFile streamFile = new StreamFile();
+        streamFile.setDataByte(resBytes);
+        streamFile.setFileName(channel.getName() + "-" + fileName + ".jpg".trim());
+        streamFile.setChannelName(channel.getName());
+        streamFile.setChannelNumber(channel.getNumber());
+        return streamFile;
     }
-
     //抓图保存到缓冲区(linux)
-    private ByteArrayDataSource getMemoryImage(ChannelInfo channel) {
+    private byte[] getMemoryImageByte(ChannelInfo channel) {
         HCNetSDK.NET_DVR_JPEGPARA jpegpara = new HCNetSDK.NET_DVR_JPEGPARA();
         jpegpara.read();
         jpegpara.wPicSize = NvrConfigConstant.capturePicSize;
@@ -124,6 +125,11 @@ public class CapturePictureHelper {
         }
         byte_array.read();
         byte[] resBytes = byte_array.getPointer().getByteArray(0, ret.getValue());
+        return resBytes;
+    }
+    //抓图保存到缓冲区(linux)
+    private ByteArrayDataSource getMemoryImage(ChannelInfo channel) {
+        byte[] resBytes = getMemoryImageByte(channel);
         return new ByteArrayDataSource(resBytes, "image/jpeg");
     }
 

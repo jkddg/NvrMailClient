@@ -19,6 +19,7 @@ public class NvrMailClientApplication {
     public static void main(String[] args) {
         SpringApplication.run(NvrMailClientApplication.class, args);
         SDKInit.init();
+        OpencvInit.init();
         int lUserID = LoginHelper.loginByConfig();
         //1、布防
         if (lUserID > -1) {

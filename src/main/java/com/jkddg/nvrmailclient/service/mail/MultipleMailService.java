@@ -1,7 +1,7 @@
-package com.jkddg.nvrmailclient.email;
+package com.jkddg.nvrmailclient.service.mail;
 
 import com.jkddg.nvrmailclient.model.MailRequest;
-import com.jkddg.nvrmailclient.model.MailStreamAttachment;
+import com.jkddg.nvrmailclient.model.StreamFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -13,6 +13,7 @@ import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.File;
 import java.util.*;
 
@@ -92,7 +93,7 @@ public class MultipleMailService {
     }
 
     //声明一个Message对象(代表一封邮件),从session中创建
-    private MimeMessage getMimeMessage(String username, String toEmail, String subject, String text, List<MailStreamAttachment> streamAttachments, List<String> fileAttachments, JavaMailSenderImpl javaMailSender) throws MessagingException {
+    private MimeMessage getMimeMessage(String username, String toEmail, String subject, String text, List<StreamFile> streamAttachments, List<String> fileAttachments, JavaMailSenderImpl javaMailSender) throws MessagingException {
 
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
@@ -106,9 +107,10 @@ public class MultipleMailService {
         //邮件内容
         mimeMessageHelper.setText(text, true);
         if (!CollectionUtils.isEmpty(streamAttachments)) {
-            for (MailStreamAttachment attachment : streamAttachments) {
-                if (attachment != null && attachment.getDataSource() != null) {
-                    mimeMessageHelper.addAttachment(attachment.getName(), attachment.getDataSource());
+            for (StreamFile attachment : streamAttachments) {
+                if (attachment != null && attachment.getDataByte() != null) {
+                    ByteArrayDataSource dataSource = new ByteArrayDataSource(attachment.getDataByte(), "image/jpeg");
+                    mimeMessageHelper.addAttachment(attachment.getFileName(), dataSource);
                 }
             }
         }

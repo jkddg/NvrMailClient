@@ -1,12 +1,10 @@
 package com.jkddg.nvrmailclient.constant;
 
-import com.jkddg.nvrmailclient.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalTime;
 
 /**
  * @Author huangyonghao
@@ -21,7 +19,7 @@ public class NvrConfigConstant {
     public static String serverUser;
     public static String serverPwd;
     public static short capturePicSize;
-    public static int captureCount;
+    public static int alarmCaptureCount;
     public static int captureIntervalSecond;
     public static String captureFolder;
     public static String captureFolderLinux;
@@ -38,6 +36,7 @@ public class NvrConfigConstant {
     public static String winLibPath;
     public static int mailIntervalSecond;
     public static boolean captureInMemory = true;
+    public static boolean findPeople = false;
 
     /**
      * 白天抓图时间间隔
@@ -47,7 +46,6 @@ public class NvrConfigConstant {
      * 自定义时间段抓图时间间隔
      */
     public static String customCaptureInterval;
-
 
 
     @PostConstruct
@@ -62,7 +60,7 @@ public class NvrConfigConstant {
         captureFolderWin = env.getProperty("nvr.capture.folder-win");
         captureFolderLinux = env.getProperty("nvr.capture.folder-linux");
         capturePicSize = Short.parseShort(env.getProperty("nvr.capture.pic-size"));
-        captureCount = Integer.parseInt(env.getProperty("nvr.capture.count"));
+        alarmCaptureCount = Integer.parseInt(env.getProperty("nvr.capture.count"));
         alarmIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.interval-second"));
         mailIntervalSecond = Integer.parseInt(env.getProperty("nvr.alarm.mail-interval-second"));
         mailTo = env.getProperty("nvr.mail-to");
@@ -75,5 +73,6 @@ public class NvrConfigConstant {
         captureInMemory = Boolean.parseBoolean(env.getProperty("nvr.capture.in-memory"));
         defaultCaptureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.default-capture-interval-second"));
         customCaptureInterval = env.getProperty("nvr.capture.custom-capture-interval");
+        findPeople = Boolean.parseBoolean(env.getProperty("nvr.capture.find-people"));
     }
 }
