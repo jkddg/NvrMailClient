@@ -39,4 +39,14 @@ public class ByteUtil {
         }
         return result;
     }
+
+    public static String byteToString(byte[] b,String charsetName){
+        String result = "";
+        try {
+            result = new String(b, charsetName).trim();
+        } catch (Exception ex) {
+
+        }
+        return result;
+    }
 }
