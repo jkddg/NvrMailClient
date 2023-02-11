@@ -38,7 +38,7 @@ public class IdentifyPeopleTask {
     @Autowired
     private MailService mailService;
 
-    @Scheduled(fixedDelay = 6 * 1000)   //定时器定义，设置执行时间
+    @Scheduled(fixedDelay = 10 * 1000)   //定时器定义，设置执行时间
     @Async("taskPoolExecutor")
     public void identifyMailSend() {
         if (NvrConfigConstant.findPeople) {
@@ -64,7 +64,7 @@ public class IdentifyPeopleTask {
                             }
                         }
                     }
-                }, i * 1, TimeUnit.SECONDS);
+                }, i * 2000, TimeUnit.MILLISECONDS);
             }
         }
     }
