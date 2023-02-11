@@ -53,8 +53,6 @@ public class CaptureService {
                 }, NvrConfigConstant.alarmIntervalSecond * i, TimeUnit.SECONDS);
             }
         }
-
-
     }
 
     public void appendCapture(Integer channel, int captureIndex) {
@@ -89,13 +87,13 @@ public class CaptureService {
         //内存抓图
         StreamFile streamFile = capturePictureHelper.getMemoryImage(picPrefix + captureIndex, channelInfo);
         if (streamFile != null) {
-            if (NvrConfigConstant.findPeople) {
-                byte[] resByte = HumanBodyRecognition.findPeople(streamFile.getDataByte());
-                if (resByte != null) {
-                    streamFile.setDataByte(resByte);
-                    streamFile.setIdentifiedPeople(true);
-                }
-            }
+//            if (NvrConfigConstant.findPeople) {
+//                byte[] resByte = HumanBodyRecognition.findPeople(streamFile.getDataByte());
+//                if (resByte != null) {
+//                    streamFile.setDataByte(resByte);
+//                    streamFile.setIdentifiedPeople(true);
+//                }
+//            }
             CAPTURE_QUEUE.add(streamFile);
         } else {
             log.warn(channelInfo.getName() + "第" + captureIndex + "次内存抓图失败");

@@ -32,19 +32,21 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class MailTask {
+public class ScheduleMailTask {
 
 
     /**
      * 任务上次执行时间
      */
     private static LocalDateTime lastExecutionTime = null;
+
+    private static LocalDateTime lastScheduleMailTime = LocalDateTime.now();
     private static List<CustomCaptureConfig> captureConfigs;
     @Autowired
     CaptureService captureService;
 
 
-    @Scheduled(fixedRate = 2 * 1000)   //定时器定义，设置执行时间
+    @Scheduled(fixedRate = 5 * 1000)   //定时器定义，设置执行时间
     @Async("taskPoolExecutor")
     public void timerMailSend() {
         if (lastExecutionTime == null) {
