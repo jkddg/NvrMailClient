@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,10 +39,13 @@ public class IdentifyPeopleTask {
     @Autowired
     private MailService mailService;
 
-    @Scheduled(fixedDelay = 10 * 1000)   //定时器定义，设置执行时间
+    private LocalTime dayTimeStart=LocalTime.of(7,30);
+    private LocalTime dayTimeEnd=LocalTime.of(17,30);
+
+    @Scheduled(fixedDelay = 15 * 1000)   //定时器定义，设置执行时间
     @Async("taskPoolExecutor")
     public void identifyMailSend() {
-        if (NvrConfigConstant.findPeople) {
+        if (NvrConfigConstant.findPeople && LocalTime.now().isAfter(dayTimeStart) && LocalTime.now().isBefore(dayTimeEnd)) {
             List<ChannelInfo> channelInfos = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
             for (int i = 0; i < channelInfos.size(); i++) {
                 ChannelInfo channelInfo = channelInfos.get(i);
@@ -64,7 +68,7 @@ public class IdentifyPeopleTask {
                             }
                         }
                     }
-                }, i * 2000, TimeUnit.MILLISECONDS);
+                }, i * 3000, TimeUnit.MILLISECONDS);
             }
         }
     }

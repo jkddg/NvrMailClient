@@ -30,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class CaptureService {
 
-    //    public static final ExecutorService executorService = new ThreadPoolExecutor(Runtime.getRuntime().availableProcessors(), 16, 5000, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>(16), new ThreadPoolExecutor.DiscardPolicy());
     private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors());
     public static LinkedBlockingQueue<StreamFile> CAPTURE_QUEUE = new LinkedBlockingQueue<>();
 
