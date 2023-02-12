@@ -90,7 +90,7 @@ public class HumanBodyRecognition {
          * @param winStride窗口跨度。 它必须是跨步的倍数。
          * @param padding填充
          */
-        hog.detectMultiScale(gary, rect, new MatOfDouble(), 0.27, new Size(8, 8), new Size(8, 8), 1.09);
+        hog.detectMultiScale(gary, rect, new MatOfDouble(), 0.25, new Size(8, 8), new Size(8, 8), 1.09);
 
         Rect[] rects = rect.toArray();
         boolean found = false;
@@ -143,7 +143,7 @@ public class HumanBodyRecognition {
     }
 
     public static void test() {
-        String[] path = new String[]{"前门-20230211175819.jpg","内院-20230211173923.jpg","前门-20230211173509.jpg","前门-20230211171659.jpg","前门-20230211165342.jpg","前门-20230211165606.jpg","内院-20230211105657-1.jpg", "内院-20230211103714-1.jpg", "20230206095459-1.jpg", "2020011813492339.jpg", "内院-20230210123330-1.jpg", "前门-20230211101215-1.jpg", "前门-20230211100603-1.jpg", "内院-20230211102133-1.jpg", "内院-20230211102643-1.jpg"};
+        String[] path = new String[]{"前门-20230212113041.jpg","前门-20230211175819.jpg","内院-20230211173923.jpg","前门-20230211173509.jpg","前门-20230211171659.jpg","前门-20230211165342.jpg","前门-20230211165606.jpg","内院-20230211105657-1.jpg", "内院-20230211103714-1.jpg", "20230206095459-1.jpg", "2020011813492339.jpg", "内院-20230210123330-1.jpg", "前门-20230211101215-1.jpg", "前门-20230211100603-1.jpg", "内院-20230211102133-1.jpg", "内院-20230211102643-1.jpg"};
         for (String s : path) {
             File file = new File("D:\\human\\" + s);
             try {

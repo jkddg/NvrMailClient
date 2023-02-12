@@ -93,7 +93,7 @@ public class ScheduleMailTask {
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
         if (!CollectionUtils.isEmpty(list)) {
             List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
-            captureService.alarmCapture(channels);
+            captureService.scheduleCapture(channels);
         }
     }
 
