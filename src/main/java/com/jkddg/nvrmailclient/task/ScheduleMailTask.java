@@ -47,7 +47,6 @@ public class ScheduleMailTask {
 
 
     @Scheduled(fixedRate = 5 * 1000)   //定时器定义，设置执行时间
-    @Async("taskPoolExecutor")
     public void timerMailSend() {
         if (lastExecutionTime == null) {
             lastExecutionTime = LocalDateTime.now();
@@ -98,10 +97,10 @@ public class ScheduleMailTask {
         }
     }
 
-    @Bean(name = "taskPoolExecutor")
-    public ExecutorService taskPoolExecutor() {
-        ExecutorService poolExecutor = new ThreadPoolExecutor(2, 4, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy());
-        return poolExecutor;
-    }
+//    @Bean(name = "taskPoolExecutor")
+//    public ExecutorService taskPoolExecutor() {
+//        ExecutorService poolExecutor = new ThreadPoolExecutor(2, 4, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy());
+//        return poolExecutor;
+//    }
 
 }
