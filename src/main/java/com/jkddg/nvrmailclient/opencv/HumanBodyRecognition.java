@@ -91,7 +91,7 @@ public class HumanBodyRecognition {
          * @param padding填充
          */
         hog.detectMultiScale(gary, rect, new MatOfDouble(), 0.25, new Size(8, 8), new Size(8, 8), 1.09);
-
+        gary.release();
         Rect[] rects = rect.toArray();
         boolean found = false;
         for (int i = 0; i < rects.length; i++) {
@@ -111,6 +111,7 @@ public class HumanBodyRecognition {
         if (found) {
             return srcImage;
         }
+        srcImage.release();
         return null;
     }
 
@@ -143,7 +144,7 @@ public class HumanBodyRecognition {
     }
 
     public static void test() {
-        String[] path = new String[]{"前门-20230212113041.jpg","前门-20230211175819.jpg","内院-20230211173923.jpg","前门-20230211173509.jpg","前门-20230211171659.jpg","前门-20230211165342.jpg","前门-20230211165606.jpg","内院-20230211105657-1.jpg", "内院-20230211103714-1.jpg", "20230206095459-1.jpg", "2020011813492339.jpg", "内院-20230210123330-1.jpg", "前门-20230211101215-1.jpg", "前门-20230211100603-1.jpg", "内院-20230211102133-1.jpg", "内院-20230211102643-1.jpg"};
+        String[] path = new String[]{"前门-20230213115346.jpg", "前门-20230212113041.jpg", "前门-20230211175819.jpg", "内院-20230211173923.jpg", "前门-20230211173509.jpg", "前门-20230211171659.jpg", "前门-20230211165342.jpg", "前门-20230211165606.jpg", "内院-20230211105657-1.jpg", "内院-20230211103714-1.jpg", "20230206095459-1.jpg", "2020011813492339.jpg", "内院-20230210123330-1.jpg", "前门-20230211101215-1.jpg", "前门-20230211100603-1.jpg", "内院-20230211102133-1.jpg", "内院-20230211102643-1.jpg"};
         for (String s : path) {
             File file = new File("D:\\human\\" + s);
             try {
@@ -185,7 +186,34 @@ public class HumanBodyRecognition {
         MatOfByte matOfByte = new MatOfByte();
         MatOfInt moi = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, 60);
         Imgcodecs.imencode(".jpg", mat, matOfByte, moi);
+        mat.release();
         return matOfByte.toArray();
     }
 
+    private static byte[] findPeopleWithCover(byte[] srcImage,Mat logo){
+        long startTime = System.currentTimeMillis();
+        Mat mat = getImageMat(srcImage);
+        mat=getCoverMat(mat,logo);
+        try {
+            mat = findPeople(mat);
+        } catch (Exception ex) {
+            log.error("opencv异常" + ex.getMessage() + ex.getStackTrace());
+        }
+        long consumeTime = System.currentTimeMillis() - startTime;
+        log.info("findPeople耗时:" + consumeTime + "毫秒");
+        if (mat == null) {
+            return null;
+        }
+        MatOfByte matOfByte = new MatOfByte();
+        MatOfInt moi = new MatOfInt(Imgcodecs.IMWRITE_JPEG_QUALITY, 60);
+        Imgcodecs.imencode(".jpg", mat, matOfByte, moi);
+        mat.release();
+        return matOfByte.toArray();
+    }
+    private static Mat getCoverMat(Mat source, Mat logo) {
+        Rect rect = new Rect(0, 0, logo.cols(), logo.rows());
+        source.submat(rect);
+        Core.add(source, logo, logo);
+        return source;
+    }
 }

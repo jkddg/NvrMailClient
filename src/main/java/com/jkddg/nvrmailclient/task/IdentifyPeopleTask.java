@@ -42,7 +42,7 @@ public class IdentifyPeopleTask {
     private LocalTime dayTimeStart=LocalTime.of(7,30);
     private LocalTime dayTimeEnd=LocalTime.of(17,30);
 
-    @Scheduled(fixedDelay = 10 * 1000)   //定时器定义，设置执行时间
+    @Scheduled(fixedDelay = 6 * 1000)   //定时器定义，设置执行时间
     public void identifyMailSend() {
         if (NvrConfigConstant.findPeople && LocalTime.now().isAfter(dayTimeStart) && LocalTime.now().isBefore(dayTimeEnd)) {
             List<ChannelInfo> channelInfos = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
@@ -67,7 +67,7 @@ public class IdentifyPeopleTask {
                             }
                         }
                     }
-                }, i * 2000, TimeUnit.MILLISECONDS);
+                }, i * 1200, TimeUnit.MILLISECONDS);
             }
         }
     }

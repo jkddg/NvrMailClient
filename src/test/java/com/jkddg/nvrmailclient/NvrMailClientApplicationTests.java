@@ -1,5 +1,6 @@
 package com.jkddg.nvrmailclient;
 
+import com.jkddg.nvrmailclient.opencv.HumanBodyRecognition;
 import com.jkddg.nvrmailclient.service.mail.MultipleMailService;
 import com.jkddg.nvrmailclient.service.mail.SimpleMailService;
 import com.jkddg.nvrmailclient.hkHelper.CapturePictureHelper;
@@ -18,6 +19,7 @@ class NvrMailClientApplicationTests {
     @Autowired
     CapturePictureHelper capturePictureHelper;
 
+
     @Test
     void sendMail() {
         MailRequest mailRequest = new MailRequest();
@@ -29,10 +31,7 @@ class NvrMailClientApplicationTests {
     }
 
     @Test
-    void listen() {
-        SDKInit.init();
+    void people() {
 
-
-//        capturePictureHelper.getNVRPic("d:\\",channelList);
     }
 }
