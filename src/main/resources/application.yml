@@ -94,5 +94,6 @@ nvr:
     interval-second: 30
     mail-interval-second: 150
     capture-count: 1
+    channel-name: 前门,内院
   mail-to: jkddg2022@163.com
 

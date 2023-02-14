@@ -47,6 +47,8 @@ public class NvrConfigConstant {
      */
     public static String customCaptureInterval;
 
+    public static String alarmChannelName;
+
 
     @PostConstruct
     public void readConfig() {
@@ -74,5 +76,6 @@ public class NvrConfigConstant {
         defaultCaptureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.default-capture-interval-second"));
         customCaptureInterval = env.getProperty("nvr.capture.custom-capture-interval");
         findPeople = Boolean.parseBoolean(env.getProperty("nvr.capture.find-people"));
+        alarmChannelName = env.getProperty("nvr.alarm.channel-name");
     }
 }

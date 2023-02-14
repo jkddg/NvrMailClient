@@ -18,10 +18,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -39,35 +36,40 @@ public class IdentifyPeopleTask {
     @Autowired
     private MailService mailService;
 
-    private LocalTime dayTimeStart=LocalTime.of(7,30);
-    private LocalTime dayTimeEnd=LocalTime.of(17,30);
+    private LocalTime dayTimeStart = LocalTime.of(7, 30);
+    private LocalTime dayTimeEnd = LocalTime.of(17, 30);
+
 
     @Scheduled(fixedDelay = 6 * 1000)   //定时器定义，设置执行时间
     public void identifyMailSend() {
         if (NvrConfigConstant.findPeople && LocalTime.now().isAfter(dayTimeStart) && LocalTime.now().isBefore(dayTimeEnd)) {
             List<ChannelInfo> channelInfos = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
+            String[] alarmChannels = NvrConfigConstant.alarmChannelName.split(",");
+            Set<String> channelSet = new HashSet<>(Arrays.asList(alarmChannels));
             for (int i = 0; i < channelInfos.size(); i++) {
                 ChannelInfo channelInfo = channelInfos.get(i);
-                executor.schedule(new Runnable() {
-                    @Override
-                    public void run() {
-                        log.info("通道[" + channelInfo.getName() + "]触发抓图事件");
-                        //2、通道截图
-                        String picPrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-                        //内存抓图
-                        StreamFile streamFile = capturePictureHelper.getMemoryImage(picPrefix, channelInfo);
-                        if (streamFile != null) {
-                            byte[] resByte = HumanBodyRecognition.findPeople(streamFile.getDataByte());
-                            if (resByte != null) {
-                                streamFile.setDataByte(resByte);
-                                streamFile.setIdentifiedPeople(true);
-                                List<StreamFile> streamFiles = new ArrayList<>();
-                                streamFiles.add(streamFile);
-                                mailService.sendMail(streamFiles, "【有人】");
+                if (channelSet.contains(channelInfo.getName())) {
+                    executor.schedule(new Runnable() {
+                        @Override
+                        public void run() {
+                            log.info("通道[" + channelInfo.getName() + "]触发抓图事件");
+                            //2、通道截图
+                            String picPrefix = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                            //内存抓图
+                            StreamFile streamFile = capturePictureHelper.getMemoryImage(picPrefix, channelInfo);
+                            if (streamFile != null) {
+                                byte[] resByte = HumanBodyRecognition.findPeople(streamFile.getDataByte());
+                                if (resByte != null) {
+                                    streamFile.setDataByte(resByte);
+                                    streamFile.setIdentifiedPeople(true);
+                                    List<StreamFile> streamFiles = new ArrayList<>();
+                                    streamFiles.add(streamFile);
+                                    mailService.sendMail(streamFiles, "【有人】");
+                                }
                             }
                         }
-                    }
-                }, i * 1200, TimeUnit.MILLISECONDS);
+                    }, i * 1000, TimeUnit.MILLISECONDS);
+                }
             }
         }
     }
