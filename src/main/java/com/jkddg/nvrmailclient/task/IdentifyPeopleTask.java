@@ -10,10 +10,7 @@ import com.jkddg.nvrmailclient.opencv.HumanBodyRecognition;
 import com.jkddg.nvrmailclient.service.mail.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -40,7 +37,7 @@ public class IdentifyPeopleTask {
     private LocalTime dayTimeEnd = LocalTime.of(17, 30);
 
 
-    @Scheduled(fixedDelay = 6 * 1000)   //定时器定义，设置执行时间
+//    @Scheduled(fixedDelay = 6 * 1000)   //定时器定义，设置执行时间
     public void identifyMailSend() {
         if (NvrConfigConstant.findPeople && LocalTime.now().isAfter(dayTimeStart) && LocalTime.now().isBefore(dayTimeEnd)) {
             List<ChannelInfo> channelInfos = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);

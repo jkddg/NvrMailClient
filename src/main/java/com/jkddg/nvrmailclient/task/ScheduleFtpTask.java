@@ -5,7 +5,7 @@ import com.jkddg.nvrmailclient.constant.SDKConstant;
 import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.jkddg.nvrmailclient.model.CustomCaptureConfig;
-import com.jkddg.nvrmailclient.service.MailCaptureService;
+import com.jkddg.nvrmailclient.service.FtpCaptureService;
 import com.jkddg.nvrmailclient.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,33 +19,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 /**
  * @Author 黄永好
- * @create 2023/1/13 9:26
+ * @create 2023/4/23 9:49
  */
 @Slf4j
 @Component
-public class ScheduleMailTask {
-
-
+public class ScheduleFtpTask {
+    @Autowired
+    FtpCaptureService ftpCaptureService;
     /**
      * 任务上次执行时间
      */
     private static LocalDateTime lastExecutionTime = null;
-
     private static List<CustomCaptureConfig> captureConfigs;
-    @Autowired
-    MailCaptureService mailCaptureService;
-
-
-    @Scheduled(fixedRate = 5 * 1000)   //定时器定义，设置执行时间
-    public void timerMailSend() {
+    @Scheduled(fixedRate = 3 * 1000)   //定时器定义，设置执行时间
+    public void timerFtpSend() {
         if (lastExecutionTime == null) {
             lastExecutionTime = LocalDateTime.now();
             captureConfigs = new ArrayList<>();
-            if (StringUtils.hasText(NvrConfigConstant.mailCaptureInterval)) {
-                String[] strings = NvrConfigConstant.mailCaptureInterval.split(",");
+            if (StringUtils.hasText(NvrConfigConstant.ftpCaptureInterval)) {
+                String[] strings = NvrConfigConstant.ftpCaptureInterval.split(",");
                 if (strings.length > 0) {
                     for (String s : strings) {
                         String[] ss = s.split("-");
@@ -59,7 +53,7 @@ public class ScheduleMailTask {
                     }
                 }
             }
-            doMailSend();
+            doFtpSend();
             return;
         }
         //如果有自定义时间段的，遍历自定义时间段，按自定义频率发送邮件
@@ -68,7 +62,7 @@ public class ScheduleMailTask {
                 if (DateUtil.chkInBetweenNow(captureConfig.getStartTime(), captureConfig.getEndTime())) {
                     if (LocalDateTime.now().minusSeconds(captureConfig.getIntervalSecond()).isAfter(lastExecutionTime)) {
                         lastExecutionTime = LocalDateTime.now();
-                        doMailSend();
+                        doFtpSend();
                     }
                     return;
                 }
@@ -77,23 +71,17 @@ public class ScheduleMailTask {
         //按默认频率发送邮件
         if (LocalDateTime.now().minusSeconds(NvrConfigConstant.defaultCaptureIntervalSecond).isAfter(lastExecutionTime)) {
             lastExecutionTime = LocalDateTime.now();
-            doMailSend();
+            doFtpSend();
         }
     }
 
-    private void doMailSend() {
+    private void doFtpSend() {
 //        log.info("MailSend");
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
         if (!CollectionUtils.isEmpty(list)) {
             List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
-            mailCaptureService.scheduleCapture(channels);
+            ftpCaptureService.scheduleCapture(channels);
         }
     }
-
-//    @Bean(name = "taskPoolExecutor")
-//    public ExecutorService taskPoolExecutor() {
-//        ExecutorService poolExecutor = new ThreadPoolExecutor(2, 4, 10L, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(), new ThreadPoolExecutor.CallerRunsPolicy());
-//        return poolExecutor;
-//    }
 
 }

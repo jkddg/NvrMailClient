@@ -47,7 +47,7 @@ public class SDKInit {
         log.info("winLibPath=" + NvrConfigConstant.winLibPath);
         log.info("captureInMemory=" + NvrConfigConstant.captureInMemory);
         log.info("defaultCaptureIntervalSecond=" + NvrConfigConstant.defaultCaptureIntervalSecond);
-        log.info("customCaptureInterval=" + NvrConfigConstant.customCaptureInterval);
+        log.info("customCaptureInterval=" + NvrConfigConstant.mailCaptureInterval);
 
         if (hCNetSDK == null) {
             if (!createSDKInstance()) {

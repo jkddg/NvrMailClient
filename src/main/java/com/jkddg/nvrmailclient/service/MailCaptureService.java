@@ -7,7 +7,6 @@ import com.jkddg.nvrmailclient.hkHelper.ChannelHelper;
 import com.jkddg.nvrmailclient.hkHelper.LoginHelper;
 import com.jkddg.nvrmailclient.model.ChannelInfo;
 import com.jkddg.nvrmailclient.model.StreamFile;
-import com.jkddg.nvrmailclient.opencv.HumanBodyRecognition;
 import com.jkddg.nvrmailclient.service.mail.MailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class CaptureService {
+public class MailCaptureService {
 
     private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(Runtime.getRuntime().availableProcessors());
     public static LinkedBlockingQueue<StreamFile> CAPTURE_QUEUE = new LinkedBlockingQueue<>();

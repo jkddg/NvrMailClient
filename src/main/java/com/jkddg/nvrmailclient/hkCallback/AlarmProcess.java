@@ -1,7 +1,7 @@
 package com.jkddg.nvrmailclient.hkCallback;
 
 import com.jkddg.nvrmailclient.HCNetSDK;
-import com.jkddg.nvrmailclient.service.CaptureService;
+import com.jkddg.nvrmailclient.service.MailCaptureService;
 import com.jkddg.nvrmailclient.util.ByteUtil;
 import com.sun.jna.Pointer;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.List;
 public class AlarmProcess {
 
     @Autowired
-    CaptureService captureService;
+    MailCaptureService mailCaptureService;
 
     public List<Integer> filterAlarmChannel(HCNetSDK.NET_DVR_ALARMINFO_V30 struAlarmInfo) {
         List<Integer> alarmChannels = new ArrayList<>();
@@ -46,7 +46,7 @@ public class AlarmProcess {
                 struAlarmInfo.read();
 //                log.info("报警类型：" + struAlarmInfo.dwAlarmType);  // 3-移动侦测
                 List<Integer> channel = filterAlarmChannel(struAlarmInfo);
-                captureService.alarmCapture(channel);
+                mailCaptureService.alarmCapture(channel);
                 break;
             case HCNetSDK.COMM_ALARM_V40: //移动侦测、视频丢失、遮挡、IO信号量等报警信息，报警数据为可变长
                 log.warn("未处理的移动侦测类型COMM_ALARM_V40");

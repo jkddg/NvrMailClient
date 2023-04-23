@@ -85,7 +85,8 @@ nvr:
     sleep-second: 3
     pic-quality: 1
     default-capture-interval-second: 60
-    custom-capture-interval: "03:30-07:30-180,17:00-22:00-180"
+    mail-capture-interval: "03:30-07:30-180,17:00-22:00-180"
+    ftp-capture-interval: "03:30-07:30-180,17:00-22:00-180"
     find-people: true
   channel:
     flash-minute: 1
@@ -97,3 +98,12 @@ nvr:
     channel-name: 前门,内院
   mail-to: jkddg2022@163.com
 
+#ftp服务器ip
+ftp:
+  host: jkddg.cn
+  #ftp端口号
+  port: 8021
+  #ftp请求的用户名
+  username: ftpUser
+  #ftp请求的密码
+  password: jkddg123456

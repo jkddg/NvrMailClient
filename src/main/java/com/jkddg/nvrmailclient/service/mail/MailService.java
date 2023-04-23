@@ -17,7 +17,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-import static com.jkddg.nvrmailclient.service.CaptureService.CAPTURE_QUEUE;
+import static com.jkddg.nvrmailclient.service.MailCaptureService.CAPTURE_QUEUE;
 
 /**
  * @Author 黄永好

@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.mail.util.ByteArrayDataSource;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 
 import static com.jkddg.nvrmailclient.constant.SDKConstant.hCNetSDK;
 import static com.jkddg.nvrmailclient.constant.SDKConstant.lUserID;
@@ -109,6 +107,7 @@ public class CapturePictureHelper {
         streamFile.setChannelNumber(channel.getNumber());
         return streamFile;
     }
+
     //抓图保存到缓冲区(linux)
     private byte[] getMemoryImageByte(ChannelInfo channel) {
         HCNetSDK.NET_DVR_JPEGPARA jpegpara = new HCNetSDK.NET_DVR_JPEGPARA();
@@ -127,11 +126,13 @@ public class CapturePictureHelper {
         byte[] resBytes = byte_array.getPointer().getByteArray(0, ret.getValue());
         return resBytes;
     }
+
     //抓图保存到缓冲区(linux)
     private ByteArrayDataSource getMemoryImage(ChannelInfo channel) {
         byte[] resBytes = getMemoryImageByte(channel);
         return new ByteArrayDataSource(resBytes, "image/jpeg");
     }
+
 
 
 }

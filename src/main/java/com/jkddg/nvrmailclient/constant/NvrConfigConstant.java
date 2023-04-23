@@ -45,9 +45,15 @@ public class NvrConfigConstant {
     /**
      * 自定义时间段抓图时间间隔
      */
-    public static String customCaptureInterval;
+    public static String mailCaptureInterval;
+    public static String ftpCaptureInterval;
 
     public static String alarmChannelName;
+
+    public static String ftpHost;
+    public static int ftpPort;
+    public static String ftpUser;
+    public static String ftpPassword;
 
 
     @PostConstruct
@@ -74,8 +80,13 @@ public class NvrConfigConstant {
         sdkLogLinux = env.getProperty("nvr.linux-sdk-log");
         captureInMemory = Boolean.parseBoolean(env.getProperty("nvr.capture.in-memory"));
         defaultCaptureIntervalSecond = Integer.parseInt(env.getProperty("nvr.capture.default-capture-interval-second"));
-        customCaptureInterval = env.getProperty("nvr.capture.custom-capture-interval");
+        mailCaptureInterval = env.getProperty("nvr.capture.mail-capture-interval");
+        ftpCaptureInterval = env.getProperty("nvr.capture.ftp-capture-interval");
         findPeople = Boolean.parseBoolean(env.getProperty("nvr.capture.find-people"));
         alarmChannelName = env.getProperty("nvr.alarm.channel-name");
+        ftpHost=env.getProperty("ftp.host");
+        ftpPort=Integer.parseInt(env.getProperty("ftp.port"));
+        ftpUser=env.getProperty("ftp.username");
+        ftpPassword=env.getProperty("ftp.password");
     }
 }
