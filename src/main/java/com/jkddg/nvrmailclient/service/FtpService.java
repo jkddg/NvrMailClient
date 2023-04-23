@@ -28,6 +28,7 @@ public class FtpService {
      * 初始化ftp服务器
      */
     public static void initFtpClient() {
+
         if (ftpClient == null || !ftpClient.isAvailable()) {
             synchronized (ftpLock) {
                 if (ftpClient == null || !ftpClient.isAvailable()) {
@@ -47,10 +48,9 @@ public class FtpService {
                         } else {
                             log.info("connect failed...ftp服务器:" + NvrConfigConstant.ftpHost + ":" + NvrConfigConstant.ftpPort);
                         }
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        log.error("登录FTP服务器异常", e);
+                        ftpClient = null;
                     }
                 }
             }
@@ -75,6 +75,10 @@ public class FtpService {
             inputStream = new FileInputStream(file);
             //初始化ftp
             initFtpClient();
+            if (ftpClient == null || !ftpClient.isAvailable()) {
+                log.info("FTP未创建连接,上传文件失败");
+                return false;
+            }
             //设置编码
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             //文件需要保存的路径
@@ -116,21 +120,26 @@ public class FtpService {
      * @param inputStream 输入文件流
      * @return
      */
-    public boolean uploadFile(String pathname, String fileName, InputStream inputStream){
-        return uploadFile(pathname,fileName,inputStream,true);
+    public boolean uploadFile(String pathname, String fileName, InputStream inputStream) {
+        return uploadFile(pathname, fileName, inputStream, true);
     }
-    public boolean uploadFile(String pathname, String fileName, InputStream inputStream,boolean logout) {
+
+    public boolean uploadFile(String pathname, String fileName, InputStream inputStream, boolean logout) {
         boolean flag = false;
         try {
             log.info("开始上传文件");
             initFtpClient();
+            if (ftpClient == null || !ftpClient.isAvailable()) {
+                log.info("FTP未创建连接,上传文件失败");
+                return false;
+            }
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             createDirecroty(pathname);
 //            ftpClient.makeDirectory(pathname);
             ftpClient.changeWorkingDirectory(pathname);
             ftpClient.storeFile(encodeFtpFileName(fileName), inputStream);
             inputStream.close();
-            if(logout) {
+            if (logout) {
                 ftpClient.logout();
             }
             flag = true;
@@ -139,7 +148,7 @@ public class FtpService {
             log.info("上传文件失败");
             e.printStackTrace();
         } finally {
-            if (ftpClient.isConnected()) {
+            if (logout && ftpClient.isConnected()) {
                 try {
                     ftpClient.disconnect();
                 } catch (IOException e) {
@@ -157,12 +166,12 @@ public class FtpService {
         return true;
     }
 
-    public static void logout(){
+    public static void logout() {
         try {
             ftpClient.logout();
         } catch (IOException e) {
             log.error("ftp退出失败");
-        }finally {
+        } finally {
             if (ftpClient.isConnected()) {
                 try {
                     ftpClient.disconnect();
@@ -172,10 +181,14 @@ public class FtpService {
             }
         }
     }
+
     //改变目录路径
     public static boolean changeWorkingDirectory(String directory) {
         boolean flag = true;
         try {
+            if (!directory.startsWith("/")) {
+                directory = "/" + directory;
+            }
             flag = ftpClient.changeWorkingDirectory(directory);
             if (flag) {
                 log.info("进入文件夹" + directory + " 成功！");
@@ -353,26 +366,26 @@ public class FtpService {
     }
 
     private String encodeFtpFileName(String name) throws UnsupportedEncodingException {
-      return new String(name.getBytes("GBK"),"iso-8859-1");
+        return new String(name.getBytes("GBK"), "iso-8859-1");
     }
 
     private String decodeFtpFileName(String name) throws UnsupportedEncodingException {
-        return  new String(name.getBytes("iso-8859-1"), "GBK");
+        return new String(name.getBytes("iso-8859-1"), "GBK");
     }
 
     public void test() {
-        String[] path = new String[]{"前门-20230214120702.jpg","前门-20230213115346.jpg", "前门-20230212113041.jpg", "前门-20230211175819.jpg", "内院-20230211173923.jpg", "前门-20230211173509.jpg", "前门-20230211171659.jpg", "前门-20230211165342.jpg", "前门-20230211165606.jpg", "内院-20230211105657-1.jpg", "内院-20230211103714-1.jpg", "20230206095459-1.jpg", "2020011813492339.jpg", "内院-20230210123330-1.jpg", "前门-20230211101215-1.jpg", "前门-20230211100603-1.jpg", "内院-20230211102133-1.jpg", "内院-20230211102643-1.jpg"};
+        String[] path = new String[]{"前门-20230214120702.jpg", "前门-20230213115346.jpg", "前门-20230212113041.jpg", "前门-20230211175819.jpg", "内院-20230211173923.jpg", "前门-20230211173509.jpg", "前门-20230211171659.jpg", "前门-20230211165342.jpg", "前门-20230211165606.jpg", "内院-20230211105657-1.jpg", "内院-20230211103714-1.jpg", "20230206095459-1.jpg", "2020011813492339.jpg", "内院-20230210123330-1.jpg", "前门-20230211101215-1.jpg", "前门-20230211100603-1.jpg", "内院-20230211102133-1.jpg", "内院-20230211102643-1.jpg"};
         for (String s : path) {
             File file = new File("D:\\human\\" + s);
             try {
                 FileInputStream fileInputStream = new FileInputStream(file);
-                uploadFile(DateUtil.localDate2Str(LocalDate.now()),s,fileInputStream);
-                fileInputStream.close();
+                uploadFile(DateUtil.localDate2Str(LocalDate.now()), s, fileInputStream, false);
 
             } catch (Exception ex) {
                 log.error(ex.getMessage());
             }
         }
+        logout();
 
     }
 

@@ -39,7 +39,7 @@ public class ScheduleMailTask {
     MailCaptureService mailCaptureService;
 
 
-    @Scheduled(fixedRate = 5 * 1000)   //定时器定义，设置执行时间
+//    @Scheduled(fixedRate = 5 * 1000)   //定时器定义，设置执行时间
     public void timerMailSend() {
         if (lastExecutionTime == null) {
             lastExecutionTime = LocalDateTime.now();

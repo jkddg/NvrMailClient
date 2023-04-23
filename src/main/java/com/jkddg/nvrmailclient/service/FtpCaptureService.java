@@ -56,12 +56,13 @@ public class FtpCaptureService {
         for (Integer channel : channels) {
             for (int i = 0; i < NvrConfigConstant.alarmCaptureCount; i++) {
                 int captureIndex = i + 1;
-                executor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        doCapture(channel, captureIndex);
-                    }
-                });
+                doCapture(channel, captureIndex);
+//                executor.submit(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        doCapture(channel, captureIndex);
+//                    }
+//                });
             }
         }
     }
