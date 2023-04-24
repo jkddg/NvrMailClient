@@ -76,7 +76,6 @@ public class ScheduleFtpTask {
     }
 
     private void doFtpSend() {
-//        log.info("MailSend");
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
         if (!CollectionUtils.isEmpty(list)) {
             List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());

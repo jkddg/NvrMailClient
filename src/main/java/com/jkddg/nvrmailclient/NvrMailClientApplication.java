@@ -44,8 +44,6 @@ public class NvrMailClientApplication {
                 //释放SDK资源
                 SDKConstant.hCNetSDK.NET_DVR_Cleanup();
                 log.info("SDK资源回收成功");
-                FtpService.logout();
-                log.info("FTP退出成功");
             }
         }));
     }

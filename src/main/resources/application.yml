@@ -84,9 +84,9 @@ nvr:
     pic-size: 5
     sleep-second: 3
     pic-quality: 1
-    default-capture-interval-second: 60
-    mail-capture-interval: "03:30-07:30-180,17:00-22:00-180"
-    ftp-capture-interval: "03:30-07:30-60,17:00-22:00-60"
+    default-capture-interval-second: 20
+    mail-capture-interval: "00:00-23:59-3600"
+    ftp-capture-interval: "03:00-07:30-60,17:00-23:00-60"
     find-people: true
   channel:
     flash-minute: 1
