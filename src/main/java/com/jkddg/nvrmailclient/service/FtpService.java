@@ -96,6 +96,7 @@ public class FtpService {
                 try {
                     ftpClient.logout();
                     ftpClient.disconnect();
+                    log.info("退出FTP成功");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -137,6 +138,7 @@ public class FtpService {
                 try {
                     ftpClient.logout();
                     ftpClient.disconnect();
+                    log.info("退出FTP成功");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -169,6 +171,7 @@ public class FtpService {
                 try {
                     ftpClient.logout();
                     ftpClient.disconnect();
+                    log.info("退出FTP成功");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
