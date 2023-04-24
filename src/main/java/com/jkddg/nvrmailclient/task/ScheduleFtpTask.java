@@ -40,8 +40,8 @@ public class ScheduleFtpTask {
     private static Map<String, Integer> captureProbability = new HashMap<>();
 
     static {
-        captureStandard.put("内院", 20);
-        captureStandard.put("前门", 5);
+        captureStandard.put("内院", 30);
+        captureStandard.put("前门", 6);
         captureProbability.put("内院", 0);
         captureProbability.put("前门", 0);
     }
