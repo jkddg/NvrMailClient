@@ -16,7 +16,10 @@ import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -33,6 +36,16 @@ public class ScheduleFtpTask {
      */
     private static LocalDateTime lastExecutionTime = null;
     private static List<CustomCaptureConfig> captureConfigs;
+    private static Map<String, Integer> captureStandard = new HashMap<>();
+    private static Map<String, Integer> captureProbability = new HashMap<>();
+
+    static {
+        captureStandard.put("内院", 20);
+        captureStandard.put("前门", 5);
+        captureProbability.put("内院", 0);
+        captureProbability.put("前门", 0);
+    }
+
     @Scheduled(fixedRate = 3 * 1000)   //定时器定义，设置执行时间
     public void timerFtpSend() {
         if (lastExecutionTime == null) {
@@ -78,9 +91,20 @@ public class ScheduleFtpTask {
     private void doFtpSend() {
         List<ChannelInfo> list = ChannelHelper.getOnLineIPChannels(SDKConstant.lUserID);
         if (!CollectionUtils.isEmpty(list)) {
-            List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
+//            List<Integer> channels = list.stream().map(ChannelInfo::getNumber).collect(Collectors.toList());
+            List<Integer> channels = new ArrayList<>();
+            for (ChannelInfo channelInfo : list) {
+                if (!captureStandard.containsKey(channelInfo.getName()) || !captureProbability.containsKey(channelInfo.getName())) {
+                    channels.add(channelInfo.getNumber());
+                } else {
+                    captureProbability.put(channelInfo.getName(), captureProbability.get(channelInfo.getName()) + 1);
+                    if (captureProbability.get(channelInfo.getName()) >= captureStandard.get(channelInfo.getName())) {
+                        captureProbability.put(channelInfo.getName(), 0);
+                        channels.add(channelInfo.getNumber());
+                    }
+                }
+            }
             ftpCaptureService.scheduleCapture(channels);
         }
     }
-
 }
