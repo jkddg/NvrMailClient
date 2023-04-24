@@ -46,7 +46,7 @@ public class ScheduleFtpTask {
         captureProbability.put("前门", 0);
     }
 
-    @Scheduled(fixedRate = 3 * 1000)   //定时器定义，设置执行时间
+    @Scheduled(fixedRate = 2 * 1000)   //定时器定义，设置执行时间
     public void timerFtpSend() {
         if (lastExecutionTime == null) {
             lastExecutionTime = LocalDateTime.now();
