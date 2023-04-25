@@ -51,16 +51,14 @@ public class ScheduleFtpTask {
             captureConfigs = new ArrayList<>();
             if (StringUtils.hasText(NvrConfigConstant.ftpCaptureInterval)) {
                 String[] strings = NvrConfigConstant.ftpCaptureInterval.split(",");
-                if (strings.length > 0) {
-                    for (String s : strings) {
-                        String[] ss = s.split("-");
-                        if (ss.length == 3) {
-                            CustomCaptureConfig customCaptureConfig = new CustomCaptureConfig();
-                            customCaptureConfig.setStartTime(DateUtil.getTimeFromStr(ss[0]));
-                            customCaptureConfig.setEndTime(DateUtil.getTimeFromStr(ss[1]));
-                            customCaptureConfig.setIntervalSecond(Integer.parseInt(ss[2]));
-                            captureConfigs.add(customCaptureConfig);
-                        }
+                for (String s : strings) {
+                    String[] ss = s.split("-");
+                    if (ss.length == 3) {
+                        CustomCaptureConfig customCaptureConfig = new CustomCaptureConfig();
+                        customCaptureConfig.setStartTime(DateUtil.getTimeFromStr(ss[0]));
+                        customCaptureConfig.setEndTime(DateUtil.getTimeFromStr(ss[1]));
+                        customCaptureConfig.setIntervalSecond(Integer.parseInt(ss[2]));
+                        captureConfigs.add(customCaptureConfig);
                     }
                 }
             }
