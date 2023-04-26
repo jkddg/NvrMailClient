@@ -39,9 +39,9 @@ public class ScheduleFtpTask {
 
     static {
         captureStandard.put("内院", 30);
-        captureStandard.put("前门", 6);
+//        captureStandard.put("前门", 6);
         captureProbability.put("内院", 0);
-        captureProbability.put("前门", 0);
+//        captureProbability.put("前门", 0);
     }
 
     @Scheduled(fixedRate = 2 * 1000)   //定时器定义，设置执行时间
