@@ -37,7 +37,7 @@ public class FtpService {
                     ftpClient.setConnectTimeout(10000);
                     ftpClient.setDefaultTimeout(10000);
                     ftpClient.setDataTimeout(10000);
-                    ftpClient.setControlEncoding("utf-8");
+//                    ftpClient.setControlEncoding("utf-8");
                     try {
                         log.info("connecting...ftp服务器:" + NvrConfigConstant.ftpHost + ":" + NvrConfigConstant.ftpPort);
                         ftpClient.connect(NvrConfigConstant.ftpHost, NvrConfigConstant.ftpPort); //连接ftp服务器
