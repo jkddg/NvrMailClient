@@ -34,6 +34,10 @@ public class FtpService {
             synchronized (ftpLock) {
                 if (ftpClient == null || !ftpClient.isAvailable()) {
                     ftpClient = new FTPClient();
+                    ftpClient.setConnectTimeout(10000);
+                    ftpClient.setDefaultTimeout(10000);
+                    ftpClient.setDataTimeout(10000);
+                    ftpClient.setControlEncoding("utf-8");
                     try {
                         log.info("connecting...ftp服务器:" + NvrConfigConstant.ftpHost + ":" + NvrConfigConstant.ftpPort);
                         ftpClient.connect(NvrConfigConstant.ftpHost, NvrConfigConstant.ftpPort); //连接ftp服务器
@@ -41,12 +45,14 @@ public class FtpService {
 
                         ftpClient.enterLocalPassiveMode();
                         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-                        ftpClient.setControlEncoding("utf-8");
+
 
                         int replyCode = ftpClient.getReplyCode(); //是否成功登录服务器
                         if (FTPReply.isPositiveCompletion(replyCode)) {
+                            ftpClient.setSoTimeout(10000);
                             log.info("connect success...ftp服务器:" + NvrConfigConstant.ftpHost + ":" + NvrConfigConstant.ftpPort);
                         } else {
+                            ftpClient.disconnect();
                             log.info("connect failed...ftp服务器:" + NvrConfigConstant.ftpHost + ":" + NvrConfigConstant.ftpPort);
                         }
                     } catch (Exception e) {
