@@ -91,7 +91,7 @@ public class FtpService {
             log.info("上传文件失败");
             e.printStackTrace();
         } finally {
-            if (ftpClient.isConnected()) {
+            if (ftpClient != null && ftpClient.isConnected()) {
                 try {
                     ftpClient.logout();
                     ftpClient.disconnect();
@@ -133,7 +133,7 @@ public class FtpService {
             log.info("上传文件失败");
             e.printStackTrace();
         } finally {
-            if (logout && ftpClient.isConnected()) {
+            if (logout && ftpClient != null && ftpClient.isConnected()) {
                 try {
                     ftpClient.logout();
                     ftpClient.disconnect();
@@ -147,7 +147,7 @@ public class FtpService {
         return true;
     }
 
-    public boolean uploadFiles(String pathName, Map<String,InputStream> files){
+    public boolean uploadFiles(String pathName, Map<String, InputStream> files) {
         try {
             log.info("开始上传文件");
             initFtpClient();
@@ -166,7 +166,7 @@ public class FtpService {
             log.info("上传文件失败");
             e.printStackTrace();
         } finally {
-            if (ftpClient.isConnected()) {
+            if (ftpClient != null && ftpClient.isConnected()) {
                 try {
                     ftpClient.logout();
                     ftpClient.disconnect();
@@ -178,6 +178,7 @@ public class FtpService {
         }
         return true;
     }
+
     public static void logout() {
         try {
             ftpClient.logout();
