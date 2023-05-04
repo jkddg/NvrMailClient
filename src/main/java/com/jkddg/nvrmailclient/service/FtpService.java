@@ -100,7 +100,8 @@ public class FtpService {
 
         } catch (Exception e) {
             log.info("上传文件失败");
-            e.printStackTrace();
+            log.error("上传文件失败", e);
+            ftpClient = null;
         } finally {
             if (ftpClient != null && ftpClient.isConnected()) {
                 try {
@@ -142,7 +143,8 @@ public class FtpService {
             log.info("上传文件成功");
         } catch (Exception e) {
             log.info("上传文件失败");
-            e.printStackTrace();
+            log.error("上传文件失败", e);
+            ftpClient = null;
         } finally {
             if (logout && ftpClient != null && ftpClient.isConnected()) {
                 try {
@@ -162,7 +164,7 @@ public class FtpService {
         try {
             log.info("开始上传文件");
             initFtpClient();
-            if (ftpClient == null || !ftpClient.isAvailable()) {
+            if (ftpClient == null || !ftpClient.isConnected() || !ftpClient.isAvailable()) {
                 log.info("FTP未创建连接,上传文件失败");
                 return false;
             }
@@ -176,6 +178,7 @@ public class FtpService {
         } catch (Exception e) {
             log.info("上传文件失败");
             log.error("上传文件失败", e);
+            ftpClient = null;
         } finally {
             if (ftpClient != null && ftpClient.isConnected()) {
                 try {
