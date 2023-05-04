@@ -30,9 +30,14 @@ public class FtpService {
      */
     public void initFtpClient() {
 
-        if (ftpClient == null || !ftpClient.isAvailable()) {
+        if (ftpClient == null || !ftpClient.isConnected() || !ftpClient.isAvailable()) {
+            if (ftpClient == null) {
+                log.info("ftpClient=null");
+            } else {
+                log.info("ftpClient.isConnected=" + ftpClient.isConnected() + ",ftpClient.isAvailable=" + ftpClient.isAvailable());
+            }
             synchronized (ftpLock) {
-                if (ftpClient == null || !ftpClient.isAvailable()) {
+                if (ftpClient == null || !ftpClient.isConnected() || !ftpClient.isAvailable()) {
                     ftpClient = new FTPClient();
                     ftpClient.setConnectTimeout(10000);
                     ftpClient.setDefaultTimeout(10000);
@@ -56,8 +61,8 @@ public class FtpService {
                             log.info("connect failed...ftp服务器:" + NvrConfigConstant.ftpHost + ":" + NvrConfigConstant.ftpPort);
                         }
                     } catch (Exception e) {
-                        log.error("登录FTP服务器异常", e);
                         ftpClient = null;
+                        log.error("登录FTP服务器异常,ftpClient设置为null", e);
                     }
                 }
             }
@@ -170,7 +175,7 @@ public class FtpService {
             log.info("上传文件成功");
         } catch (Exception e) {
             log.info("上传文件失败");
-            e.printStackTrace();
+            log.error("上传文件失败", e);
         } finally {
             if (ftpClient != null && ftpClient.isConnected()) {
                 try {
