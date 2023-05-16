@@ -56,12 +56,13 @@ public class MailCaptureService {
         for (Integer channel : channels) {
             for (int i = 0; i < NvrConfigConstant.alarmCaptureCount; i++) {
                 int captureIndex = i + 1;
-                executor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        appendCapture(channel, captureIndex);
-                    }
-                });
+                appendCapture(channel, captureIndex);
+//                executor.submit(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        appendCapture(channel, captureIndex);
+//                    }
+//                });
             }
         }
     }
