@@ -65,6 +65,7 @@ public class MailCaptureService {
 //                });
             }
         }
+        mailService.sendAlarmMailNoShake();
     }
 
     public void appendCapture(Integer channel, int captureIndex) {
@@ -111,9 +112,9 @@ public class MailCaptureService {
             log.warn(channelInfo.getName() + "第" + captureIndex + "次内存抓图失败");
         }
         alarmTimeMap.put(channel, LocalDateTime.now());
-        if (NvrConfigConstant.alarmCaptureCount == captureIndex) {
-            mailService.sendAlarmMailNoShake();
-        }
+//        if (NvrConfigConstant.alarmCaptureCount == captureIndex) {
+//            mailService.sendAlarmMailNoShake();
+//        }
     }
 
 }
